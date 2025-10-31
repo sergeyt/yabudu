@@ -63,6 +63,7 @@ model Session {
 model Place {
   id          String       @id @default(cuid())
   name        String       @unique
+  location    String?
   description String?
   infoUrl     String?
   createdAt   DateTime     @default(now())

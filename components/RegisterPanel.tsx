@@ -1,11 +1,7 @@
 "use client";
 
 import { useTransition, useState, useMemo } from "react";
-import {
-  registerForEvent,
-  unregisterFromEvent,
-  getParticipants,
-} from "../app/actions";
+import { api } from "@/lib/api";
 import ParticipantsSheet from "./ParticipantsSheet";
 import {
   Box,
@@ -16,7 +12,7 @@ import {
   VStack,
   Link,
 } from "@chakra-ui/react";
-import { toast } from "./ui/toaster";
+import { toast } from "@/components/ui/toaster";
 
 function within24h(startAt: string) {
   const start = new Date(startAt);
@@ -130,8 +126,8 @@ export default function RegisterPanel({
           onClick={() =>
             startTransition(async () => {
               try {
-                await registerForEvent(event.id);
-                const regs = await getParticipants(event.id);
+                await api.events.register(event.id);
+                const regs = await api.events.participants(event.id);
                 setRegs(regs as any);
               } catch (e: any) {
                 toast.error({ title: e?.message || "Could not register" });
@@ -149,8 +145,8 @@ export default function RegisterPanel({
           onClick={() =>
             startTransition(async () => {
               try {
-                await unregisterFromEvent(event.id);
-                const regs = await getParticipants(event.id);
+                await api.events.unregister(event.id);
+                const regs = await api.events.participants(event.id);
                 setRegs(regs as any);
               } catch (e: any) {
                 toast.error({ title: e?.message || "Could not unregister" });

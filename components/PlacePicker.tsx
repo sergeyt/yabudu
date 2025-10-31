@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { HStack, Field, NativeSelect as Select } from "@chakra-ui/react";
+import { HStack, NativeSelect as Select, Text } from "@chakra-ui/react";
 
 type Place = {
   id: string;
@@ -26,9 +26,9 @@ export default function PlacePicker({ places, currentId }: Props) {
 
   return (
     <HStack>
-      <Field.Label m={0} fontSize="sm">
+      <Text m={0} fontSize="sm">
         Place
-      </Field.Label>
+      </Text>
       <Select.Root size="sm">
         <Select.Field
           value={currentId}

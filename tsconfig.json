@@ -22,7 +22,8 @@
       "@/app/*": ["./app/*"],
       "@/components/*": ["./components/*"],
       "@/lib/*": ["./lib/*"],
-      "@/prisma/*": ["./prisma/*"]
+      "@/prisma/*": ["./prisma/*"],
+      "@/types/*": ["./types/*"]
     }
   },
   "include": [

@@ -1,5 +1,5 @@
 import "./globals.css";
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { Container } from "@chakra-ui/react";
 import { Provider as UIProvider } from "@/components/ui/provider";
 import { NextAuthProvider } from "./providers";

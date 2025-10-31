@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import VkProvider from "next-auth/providers/vk";
@@ -79,4 +79,4 @@ export const authConfig: NextAuthOptions = {
   },
 };
 
-export const { handlers, auth } = NextAuth(authConfig);
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

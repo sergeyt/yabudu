@@ -41,9 +41,9 @@ Built with **Chakra UI**, fully deployable on **Vercel**.
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/yourusername/event-registration-app.git
-cd event-registration-app
-npm install
+git clone https://github.com/sergeyt/yabudu.git
+cd yabudu
+pnpm install
 ````
 
 ### 2. Environment variables
@@ -76,9 +76,9 @@ TBANK_CLIENT_SECRET=...
 ### 3. Prisma
 
 ```bash
-npm prisma generate
-npm prisma migrate dev
-npm prisma db seed
+pnpm install
+pnpm db:migrate
+pnpm db:seed
 ```
 
 ---
@@ -103,6 +103,7 @@ model User {
 model Place {
   id          String       @id @default(cuid())
   name        String       @unique
+  location    String?
   description String?
   infoUrl     String?
   createdAt   DateTime     @default(now())

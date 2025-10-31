@@ -12,7 +12,7 @@ import {
   VStack,
   CloseButton,
 } from "@chakra-ui/react";
-import { getParticipants } from "@/app/actions";
+import { api } from "@/lib/api";
 
 type Item = {
   id: string;
@@ -50,7 +50,7 @@ export default function ParticipantsSheet({
           variant="outline"
           size="sm"
           onClick={async () => {
-            const regs = await getParticipants(event.id);
+            const regs = await api.events.participants(event.id);
             setRegs(regs);
             setIsOpen(true);
           }}
