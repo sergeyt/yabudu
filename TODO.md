@@ -1,5 +1,5 @@
 # BUGS & IMPROVEMENTS
-- [ ] hide Place selector if not logged in
+- [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
 - [ ] hide sign-in providers if env variables are empty
 - [ ] seed script
@@ -7,6 +7,7 @@
 
 # NEW FEATURES
 - [ ] internationalization
+  - [x] basic next-intl integration
 - [ ] notification about event registrations
   - [ ] send list to MAX chat 
 - [ ] sign-up by email & phone number 

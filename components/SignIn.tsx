@@ -1,20 +1,31 @@
 "use client";
+
+import { useMemo } from "react";
 import { signIn } from "next-auth/react";
 import { Stack, IconButton, Image, Wrap, WrapItem } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useColorModeValue } from "@/components/ui/color-mode";
 
 export default function SignIn() {
-  const providers = [
-    { id: "yandex", label: "Sign in with Yandex", icon: "/icons/yandex.svg" },
-    { id: "vk", label: "Sign in with VK", icon: "/icons/vk.svg" },
-    { id: "sberid", label: "Sign in with Sber ID", icon: "/icons/sber.svg" },
-    {
-      id: "tbankid",
-      label: "Sign in with TBank ID",
-      icon: "/icons/tbank.svg",
-    },
-  ];
+  const t = useTranslations("sign_in");
+
+  const providers = useMemo(
+    () =>
+      [
+        { id: "yandex", icon: "/icons/yandex.svg" },
+        { id: "vk", label: "Sign in with VK", icon: "/icons/vk.svg" },
+        {
+          id: "sber",
+          icon: "/icons/sber.svg",
+        },
+        {
+          id: "tbank",
+          icon: "/icons/tbank.svg",
+        },
+      ].map((p) => ({ ...p, label: t(p.id) })),
+    [t],
+  );
 
   const bg = useColorModeValue("white", "gray.800");
   const border = useColorModeValue("gray.200", "gray.700");

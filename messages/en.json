@@ -1,0 +1,17 @@
+{
+  "home": {
+    "title": "I'LL BE"
+  },
+  "sign_in": {
+    "yandex": "Sign in with Yandex",
+    "vk": "Sign in with VK",
+    "sber": "Sign in with Sber ID",
+    "tbank": "Sign in with TBank ID"
+  },
+  "place_picker": {
+    "label": "Where"
+  },
+  "register": {
+    "no_upcoming_event": "No upcoming event for this place."
+  }
+}

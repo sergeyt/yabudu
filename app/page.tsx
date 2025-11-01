@@ -1,10 +1,11 @@
 import React from "react";
-import { Heading, Box, Link } from "@chakra-ui/react";
+import { Box, Link } from "@chakra-ui/react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PlacePicker from "@/components/PlacePicker";
 import RegisterPanel from "@/components/RegisterPanel";
 import SignIn from "@/components/SignIn";
+import HomePromo from "@/components/HomePromo";
 
 export default async function Home({
   searchParams,
@@ -18,7 +19,7 @@ export default async function Home({
   const place = placeId
     ? await prisma.place.findUnique({ where: { id: placeId } })
     : null;
-  const event = place
+  const upcomingEvent = place
     ? await prisma.event.findFirst({
         where: { placeId: place.id, startAt: { gt: new Date() } },
         orderBy: { startAt: "asc" },
@@ -28,16 +29,14 @@ export default async function Home({
 
   return (
     <Box as="main" display="grid" gap={4}>
-      <Heading as="h1" size="lg" textAlign="center">
-        I'LL GO HERE
-      </Heading>
-      {user?.id && <PlacePicker places={places} currentId={placeId ?? ""} />}
+      <HomePromo />
+      {user?.id && <PlacePicker places={places} currentId={place?.id ?? ""} />}
       {!user?.id ? (
         <Box p={4}>
           <SignIn />
         </Box>
       ) : (
-        <RegisterPanel event={event} userId={user.id} />
+        <RegisterPanel event={upcomingEvent} userId={user.id} />
       )}
       {user?.id && (
         <Box fontSize="xs" color="gray.600">

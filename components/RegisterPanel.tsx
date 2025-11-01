@@ -1,18 +1,21 @@
 "use client";
 
-import { useTransition, useState, useMemo } from "react";
-import { api } from "@/lib/api";
-import ParticipantsSheet from "./ParticipantsSheet";
+import { useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
+  Badge,
   Box,
   Button,
-  Text,
   HStack,
-  Badge,
-  VStack,
   Link,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
+import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
+import { type Registration, RegistrationStatus } from "@/types/model";
+import { countBy } from "@/lib/util";
+import ParticipantsSheet from "./ParticipantsSheet";
 
 function within24h(startAt: string) {
   const start = new Date(startAt);
@@ -20,12 +23,6 @@ function within24h(startAt: string) {
   const now = new Date();
   return now >= openAt && now < start;
 }
-
-type Reg = {
-  id: string;
-  userId: string;
-  status: "CONFIRMED" | "RESERVED";
-};
 
 export default function RegisterPanel({
   event,
@@ -35,24 +32,29 @@ export default function RegisterPanel({
   userId: string;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [regs, setRegs] = useState<Reg[]>(event?.regs ?? []);
+  const [regs, setRegs] = useState<Registration[]>(event?.regs ?? []);
+  const t = useTranslations("register");
 
-  const { confirmedCount, reservedCount } = useMemo(
-    () => ({
-      confirmedCount: regs.filter((r) => r.status === "CONFIRMED").length,
-      reservedCount: regs.filter((r) => r.status === "RESERVED").length,
-    }),
+  const counts = useMemo(
+    () =>
+      countBy(regs, "status", {
+        [RegistrationStatus.CONFIRMED]: 0,
+        [RegistrationStatus.RESERVED]: 0,
+      }),
     [regs],
   );
+  const confirmedCount = counts[RegistrationStatus.CONFIRMED];
+  const reservedCount = counts[RegistrationStatus.RESERVED];
 
   if (!event) {
     return (
       <Box borderWidth="1px" rounded="xl" p={4} bg="white">
-        <Text fontSize="sm">No upcoming event for this place.</Text>
+        <Text fontSize="sm">{t("no_upcoming_event")}</Text>
       </Box>
     );
   }
 
+  // TODO extract this computed state to useMemo
   const me = regs.find((r) => r.userId === userId);
   const canReg = within24h(event.startAt);
 
@@ -139,7 +141,9 @@ export default function RegisterPanel({
         </Button>
       ) : (
         <Button
-          variant={me.status === "CONFIRMED" ? "outline" : "ghost"}
+          variant={
+            me.status === RegistrationStatus.CONFIRMED ? "outline" : "ghost"
+          }
           disabled={isPending}
           loading={isPending}
           onClick={() =>

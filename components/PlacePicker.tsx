@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HStack, NativeSelect as Select, Text } from "@chakra-ui/react";
 
@@ -17,6 +18,7 @@ type Props = {
 export default function PlacePicker({ places, currentId }: Props) {
   const router = useRouter();
   const params = useSearchParams();
+  const t = useTranslations("place_picker");
 
   const options = places.map((p) => (
     <option key={p.id} value={p.id}>
@@ -27,7 +29,7 @@ export default function PlacePicker({ places, currentId }: Props) {
   return (
     <HStack>
       <Text m={0} fontSize="sm">
-        Place
+        {t("label")}:&nbsp;
       </Text>
       <Select.Root size="sm">
         <Select.Field

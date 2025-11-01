@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import type { DateLike } from "@/types/model";
+import { type DateLike, RegistrationStatus } from "@/types/model";
 
 /**
  * @param val - value to check
@@ -44,4 +44,12 @@ export function canRegisterNow(start: DateLike) {
     toDateTime(start).toJSDate().getTime() - 24 * 60 * 60 * 1000,
   );
   return now >= openAt && now < start;
+}
+
+export function countBy<T>(data: T[], key: keyof T, init = {}) {
+  return data.reduce((acc, it) => {
+    const k = it[key];
+    acc[k] = (acc[k] || 0) + 1;
+    return acc;
+  }, init as any);
 }
