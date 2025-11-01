@@ -20,7 +20,9 @@ export const AddPlaceAdmin = z.object({
 export const CreateEvent = z.object({
   placeId: z.string().min(1),
   title: z.string().min(1),
+  description: z.string().nullable(),
   startAt: z.string().min(1), // ISO or datetime-local string
   capacity: z.number().int().nonnegative().nullable().optional(),
   reserveCapacity: z.number().int().nonnegative().nullable().optional(),
+  chatId: z.string().min(1).optional().nullable(),
 });

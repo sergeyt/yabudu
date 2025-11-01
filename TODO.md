@@ -1,13 +1,17 @@
+# TESTING
+- [ ] yandex sign-in
+
 # BUGS & IMPROVEMENTS
 - [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
 - [ ] hide sign-in providers if env variables are empty
 - [ ] seed script
-- [ ] model types and reuse in code
+- [ ] refactor: extract model types and reuse in code
 
 # NEW FEATURES
 - [ ] internationalization
   - [x] basic next-intl integration
+  - [ ] switch between lang & ru translations
 - [ ] notification about event registrations
   - [ ] send list to MAX chat 
 - [ ] sign-up by email & phone number 

@@ -17,6 +17,11 @@ enum UserRole {
   SUPERADMIN
 }
 
+enum ChatType {
+  MAX
+  TELEGRAM
+}
+
 model User {
   id              String       @id @default(cuid())
   name            String?
@@ -87,6 +92,7 @@ model PlaceAdmin {
 model Event {
   id              String   @id @default(cuid())
   title           String
+  description     String?
   startAt         DateTime
   placeId         String
   place           Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
@@ -95,6 +101,9 @@ model Event {
   capacity        Int?
   reserveCapacity Int?
   regs            Registration[]
+  // chat/channel ID to notify
+  chatType        ChatType @default(MAX)
+  chatId          String?
 
   @@index([placeId, startAt])
 }
