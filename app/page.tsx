@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PlacePicker from "@/components/PlacePicker";
 import RegisterPanel from "@/components/RegisterPanel";
-import SignInButtons from "@/components/SignInButtons";
+import SignIn from "@/components/SignIn";
 
 export default async function Home({
   searchParams,
@@ -12,6 +12,7 @@ export default async function Home({
   searchParams: { place?: string };
 }) {
   const session = await auth();
+  const user = session?.user;
   const places = await prisma.place.findMany({ orderBy: { name: "asc" } });
   const placeId = searchParams.place ?? places[0]?.id;
   const place = placeId
@@ -27,21 +28,23 @@ export default async function Home({
 
   return (
     <Box as="main" display="grid" gap={4}>
-      <Heading as="h1" size="lg">
-        Event Registration
+      <Heading as="h1" size="lg" textAlign="center">
+        I'LL GO HERE
       </Heading>
-      <PlacePicker places={places} currentId={placeId ?? ""} />
-      {!session?.user ? (
-        <Box borderWidth="1px" rounded="xl" p={4} bg="white">
-          <SignInButtons />
+      {user?.id && <PlacePicker places={places} currentId={placeId ?? ""} />}
+      {!user?.id ? (
+        <Box p={4}>
+          <SignIn />
         </Box>
       ) : (
-        <RegisterPanel event={event} userId={(session.user as any).id} />
+        <RegisterPanel event={event} userId={user.id} />
       )}
-      <Box fontSize="xs" color="gray.600">
-        <Link href="/admin">Admin</Link> ·{" "}
-        <Link href="/superadmin/places">Super-admin</Link>
-      </Box>
+      {user?.id && (
+        <Box fontSize="xs" color="gray.600">
+          <Link href="/admin">Admin</Link> ·{" "}
+          <Link href="/superadmin/places">Super-admin</Link>
+        </Box>
+      )}
     </Box>
   );
 }

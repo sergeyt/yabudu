@@ -184,7 +184,7 @@ Server action `fetchRttfProfile(userId)` can be used to pull external data (e.g.
 ## 🧪 Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 App runs at [http://localhost:3000](http://localhost:3000)
