@@ -1,11 +1,11 @@
 # TESTING
-- [ ] yandex sign-in
+- [x] yandex sign-in
 
 # BUGS & IMPROVEMENTS
 - [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
+- [x] seed script
 - [ ] hide sign-in providers if env variables are empty
-- [ ] seed script
 - [ ] refactor: extract model types and reuse in code
 
 # NEW FEATURES
