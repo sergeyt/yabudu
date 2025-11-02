@@ -1,8 +1,11 @@
+import { auth } from "@/lib/auth";
 import { getRequestConfig } from "next-intl/server";
 
 export default getRequestConfig(async () => {
-  // Static for now, we'll change this later
-  const locale = "en";
+  const session = await auth();
+  const user = session?.user;
+  // TODO add preferredLanguage prop to user
+  const locale = (user as any)?.preferredLanguage || "ru";
 
   return {
     locale,
