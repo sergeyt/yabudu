@@ -7,15 +7,20 @@ import RegisterPanel from "@/components/RegisterPanel";
 import SignIn from "@/components/SignIn";
 import HomePromo from "@/components/HomePromo";
 
+type SearchParams = {
+  place?: string;
+};
+
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { place?: string };
+  searchParams: Promise<SearchParams>;
 }) {
   const session = await auth();
   const user = session?.user;
   const places = await prisma.place.findMany({ orderBy: { name: "asc" } });
-  const placeId = searchParams.place ?? places[0]?.id;
+  const params = await searchParams;
+  const placeId = params.place ?? places[0]?.id;
   const place = placeId
     ? await prisma.place.findUnique({ where: { id: placeId } })
     : null;
