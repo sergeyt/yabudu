@@ -5,6 +5,7 @@
 - [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
 - [x] seed script
+- [ ] better design & theme
 - [ ] hide sign-in providers if env variables are empty
 - [ ] refactor: extract model types and reuse in code
 
