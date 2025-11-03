@@ -9,19 +9,27 @@ on:
       - main
 
 jobs:
-  verify:
+  ci_check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@master
-        with:
-          persist-credentials: false
+      - name: checkout code
+        uses: actions/checkout@master
 
-      - name: set up node.js
+      - name: setup nodejs
         uses: actions/setup-node@master
         with:
-          node-version: "22"
+          node-version: 22
+          cache: 'pnpm'
 
-      - name: lint and build
-        run: pnpm install && pnpm lint && pnpm build
+      - name: setup pnpm
+        uses: pnpm/action-setup@master
+        with:
+          run_install: false
+
+      - name: install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: build
+        run: pnpm lint && pnpm build
