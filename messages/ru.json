@@ -60,5 +60,10 @@
     "leave_label8": "Освобождаю место",
     "leave_label9": "Выбываю из очереди",
     "leave_label10": "Минус один в списке"
+  },
+  "participants": {
+    "participants_label": "Участники",
+    "confirmed_label": "Зареганные",
+    "reserved_label": "В ожидании"
   }
 }

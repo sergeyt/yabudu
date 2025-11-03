@@ -60,5 +60,11 @@
     "leave_label8": "Free my seat",
     "leave_label9": "Standing down",
     "leave_label10": "Out of the queue"
+  },
+
+  "participants": {
+    "participants_label": "Participants",
+    "confirmed_label": "Confirmed",
+    "reserved_label": "Reserved"
   }
 }

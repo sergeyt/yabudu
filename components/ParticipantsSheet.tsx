@@ -12,7 +12,8 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { api } from "@/lib/api";
-import type { WorldEvent } from "@/types/model";
+import { RegistrationStatus, type WorldEvent } from "@/types/model";
+import { useTranslations } from "next-intl";
 
 type Item = {
   id: string;
@@ -30,10 +31,15 @@ export default function ParticipantsSheet({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [regs, setRegs] = useState<Item[]>(event.regs);
+  const t = useTranslations("participants");
 
   const { confirmed, reserved } = useMemo(() => {
-    const confirmed = regs.filter((p) => p.status === "CONFIRMED");
-    const reserved = regs.filter((p) => p.status === "RESERVED");
+    const confirmed = regs.filter(
+      (p) => p.status === RegistrationStatus.CONFIRMED,
+    );
+    const reserved = regs.filter(
+      (p) => p.status === RegistrationStatus.RESERVED,
+    );
     return { confirmed, reserved };
   }, [regs]);
 
@@ -42,6 +48,8 @@ export default function ParticipantsSheet({
     setRegs(regs);
     setIsOpen(true);
   };
+
+  // TODO extract function to render the list
 
   return (
     <Drawer.Root
@@ -63,11 +71,13 @@ export default function ParticipantsSheet({
             <CloseButton size="sm" />
           </Drawer.CloseTrigger>
           <Drawer.Header>
-            <Drawer.Title textAlign="center">Participants</Drawer.Title>
+            <Drawer.Title textAlign="center">
+              {t("participants_label")}
+            </Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
             <Text fontSize="sm" color="gray.600" mb={2}>
-              Confirmed ({confirmed.length})
+              {t("confirmed_label")} ({confirmed.length})
             </Text>
             <VStack
               align="stretch"
@@ -100,7 +110,7 @@ export default function ParticipantsSheet({
             </VStack>
             <Separator />
             <Text fontSize="sm" color="gray.600" mt={4} mb={2}>
-              Reserved ({reserved.length})
+              {t("reserved_label")} ({reserved.length})
             </Text>
             <VStack align="stretch" gap={3} maxH="30dvh" overflowY="auto">
               {reserved.map((it) => (
