@@ -4,9 +4,8 @@
 [![Next.js](https://img.shields.io/badge/Built%20with-Next.js-000000?logo=next.js)](https://nextjs.org/)
 
 **Event Registration App** — A modern **Next.js + Prisma + NextAuth** application for managing event participation.  
-Users can register via **Yandex ID, VK ID, Sber ID, or TBank ID**, select event locations, and join or leave events with automatic waitlist handling.  
-Supports **dual capacities** (confirmed + reserved lists), **admin/super-admin management**, and optional **RTTF player profile integration** for table-tennis events.  
-Built with **Chakra UI**, fully deployable on **Vercel**.
+Users can register via **Yandex ID, VK ID, Sber ID, or TBank ID**, select event places, and join or leave events with automatic waitlist handling.  
+Supports **dual capacities** (confirmed + reserved lists). Built with **Chakra UI**, fully deployable on **Vercel**.
 
 ---
 
