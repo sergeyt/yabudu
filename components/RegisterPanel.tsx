@@ -2,7 +2,15 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Badge, Box, Button, Heading, HStack, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Text,
+  Card,
+} from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
@@ -237,12 +245,14 @@ export default function RegisterPanel({
   };
 
   return (
-    <Box borderWidth="1px" rounded="xl" p={4} bg="white" display="grid" gap={3}>
-      {renderTitle()}
-      <Box w="full">
-        {renderCTA()}
-        {renderError()}
-      </Box>
-    </Box>
+    <Card.Root p={2}>
+      <Card.Header>{renderTitle()}</Card.Header>
+      <Card.Body>
+        <Box w="full" pt={4}>
+          {renderCTA()}
+          {renderError()}
+        </Box>
+      </Card.Body>
+    </Card.Root>
   );
 }
