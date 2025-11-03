@@ -23,6 +23,7 @@
       "@/components/*": ["./components/*"],
       "@/lib/*": ["./lib/*"],
       "@/prisma/*": ["./prisma/*"],
+      "@/theme/*": ["./theme/*"],
       "@/types/*": ["./types/*"]
     }
   },

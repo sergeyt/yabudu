@@ -36,6 +36,17 @@ export const buttonRecipe = defineRecipe({
         _hover: { bg: "whiteAlpha.100" },
         _active: { bg: "whiteAlpha.200" },
       },
+      danger: {
+        bg: "{colors.red.600}",
+        color: "white",
+        _hover: { bg: "{colors.red.700}" },
+        _active: { bg: "{colors.red.800}" },
+      },
+      link: {
+        color: "{colors.brand.400}",
+        _hover: { bg: "whiteAlpha.100" },
+        _active: { bg: "whiteAlpha.200" },
+      },
     },
     size: {
       sm: { px: "3", py: "1.5", fontSize: "sm" },

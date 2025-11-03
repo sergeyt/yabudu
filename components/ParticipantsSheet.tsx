@@ -47,7 +47,7 @@ export default function ParticipantsSheet({
       <Drawer.Backdrop />
       <Drawer.Trigger asChild>
         <Button
-          variant="outline"
+          variant="link"
           size="sm"
           onClick={async () => {
             const regs = await api.events.participants(event.id);
