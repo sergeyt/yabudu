@@ -211,6 +211,9 @@ export default function RegisterPanel({
   };
 
   const renderError = () => {
+    if (myReg) {
+      return null;
+    }
     return (
       <>
         {!canReg && (
