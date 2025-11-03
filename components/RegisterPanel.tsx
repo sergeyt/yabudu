@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Badge, Box, Button, HStack, Link, Text } from "@chakra-ui/react";
+import { Badge, Box, Button, HStack, Text } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
@@ -65,6 +65,7 @@ export default function RegisterPanel({
   const [isPending, startTransition] = useTransition();
   const [regs, setRegs] = useState<Registration[]>(event?.regs ?? []);
   const t = useTranslations("register");
+  const err = useTranslations("errors");
 
   const labelVariants = useMemo(() => {
     const digits = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -218,17 +219,17 @@ export default function RegisterPanel({
       <>
         {!canReg && (
           <Text fontSize="xs" color="orange.600">
-            Registration opens 24 hours before start and closes at start.
+            {err("too_early")}
           </Text>
         )}
         {confirmedFull && !reserveFull && (
           <Text fontSize="xs" color="purple.600">
-            Main capacity reached. You can join the waitlist.
+            {err("cap_reached")}
           </Text>
         )}
         {confirmedFull && reserveFull && (
           <Text fontSize="xs" color="red.600">
-            Both capacities are full.
+            {err("full")}
           </Text>
         )}
       </>

@@ -66,5 +66,11 @@
     "participants_label": "Participants",
     "confirmed_label": "Confirmed",
     "reserved_label": "Reserved"
+  },
+
+  "errors": {
+    "too_early": "Registration will open 24 hours before the event starts and close at the start time.",
+    "cap_reached": "The main capacity is full. You can join the waitlist.",
+    "full": "The event is fully booked, including the waitlist."
   }
 }
