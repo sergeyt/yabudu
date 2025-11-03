@@ -33,6 +33,7 @@ export default function PlacePicker({ places, currentId }: Props) {
       </Text>
       <Select.Root size="sm">
         <Select.Field
+          px={2}
           value={currentId}
           onChange={(e) => {
             const p = new URLSearchParams(params);

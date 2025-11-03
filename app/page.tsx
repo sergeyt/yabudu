@@ -35,13 +35,19 @@ export default async function Home({
   return (
     <Box as="main" display="grid" gap={4}>
       <HomePromo />
-      {user?.id && <PlacePicker places={places} currentId={place?.id ?? ""} />}
+      {user?.id && (
+        <Box px={3}>
+          <PlacePicker places={places} currentId={place?.id ?? ""} />
+        </Box>
+      )}
       {!user?.id ? (
         <Box p={4}>
           <SignIn />
         </Box>
       ) : (
-        <RegisterPanel event={upcomingEvent} userId={user.id} />
+        <Box px={3}>
+          <RegisterPanel event={upcomingEvent} userId={user.id} />
+        </Box>
       )}
     </Box>
   );
