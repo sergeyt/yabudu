@@ -18,9 +18,9 @@ export type Registration = {
 export type WorldEvent = {
   id: string;
   title: string;
-  description?: Opt<string>;
+  description: Opt<string>;
   startAt: DateLike;
-  capacity?: number;
-  reserveCapacity?: number;
+  capacity: Opt<number>;
+  reserveCapacity: Opt<number>;
   regs?: Registration[];
 };

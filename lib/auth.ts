@@ -1,9 +1,8 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, { type NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import VkProvider from "next-auth/providers/vk";
 import YandexProvider from "next-auth/providers/yandex";
-import type { OAuthConfig } from "next-auth/providers/oauth";
 import { isDefined } from "./util";
 
 // Generic OIDC provider factory (Sber ID, TBank/Tinkoff ID)
@@ -13,7 +12,7 @@ function OIDCProvider(
   clientId: string,
   clientSecret: string,
   scopes = ["openid", "profile", "email"],
-): OAuthConfig<any> {
+): any {
   return {
     id: name,
     name,
@@ -41,10 +40,10 @@ function OIDCProvider(
         image: profile.picture ?? null,
       };
     },
-  } as OAuthConfig<any>;
+  };
 }
 
-export const authConfig: NextAuthOptions = {
+export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
   providers: [

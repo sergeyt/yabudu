@@ -1,10 +1,15 @@
 # TESTING
 - [x] yandex sign-in
+- [x] register/unregister
+- [ ] waitlist
 
 # BUGS & IMPROVEMENTS
 - [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
-- [x] seed script
+- [ ] db scripts
+  - [x] seed script
+  - [ ] script to generate fake users
+  - [ ] script to add registrations to event for fake users 
 - [x] hide sign-in providers if env variables are empty
 - [ ] better design & theme
   - [x] theme switch

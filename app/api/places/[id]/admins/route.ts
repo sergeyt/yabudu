@@ -5,11 +5,12 @@ import { AddPlaceAdmin } from "@/lib/validation";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { userId } = await requireUser();
+  const { id: placeId } = await params;
   const requesterIsAllowed =
-    (await isSuperAdmin(userId)) || (await isPlaceAdmin(userId, params.id));
+    (await isSuperAdmin(userId)) || (await isPlaceAdmin(userId, placeId));
   if (!requesterIsAllowed) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -28,8 +29,8 @@ export async function POST(
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
   const admin = await prisma.placeAdmin.upsert({
-    where: { userId_placeId: { userId: user.id, placeId: params.id } },
-    create: { userId: user.id, placeId: params.id },
+    where: { userId_placeId: { userId: user.id, placeId } },
+    create: { userId: user.id, placeId },
     update: {},
   });
   return NextResponse.json(admin, { status: 201 });

@@ -199,6 +199,11 @@ export default function RegisterPanel({
       : myReg.status === RegistrationStatus.CONFIRMED
         ? unregisterLabel
         : leaveLabel;
+    const variant = myReg
+      ? myReg.status === RegistrationStatus.CONFIRMED
+        ? "danger"
+        : "ghost"
+      : undefined;
     return (
       <Button
         onClick={myReg ? unregister : register}
@@ -210,13 +215,7 @@ export default function RegisterPanel({
         }
         loading={isPending}
         colorScheme={myReg ? undefined : confirmedFull ? "purple" : "blue"}
-        variant={
-          myReg
-            ? myReg.status === RegistrationStatus.CONFIRMED
-              ? "danger"
-              : "ghost"
-            : undefined
-        }
+        variant={variant as any}
       >
         {primaryCta}
       </Button>

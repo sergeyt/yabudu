@@ -3,9 +3,14 @@ import { prisma } from "@/lib/prisma";
 import { requireUser, isSuperAdmin } from "@/lib/api-auth";
 import { UpdatePlace } from "@/lib/validation";
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const user = await requireUser();
+  const { id: placeId } = await params;
   const place = await prisma.place.findUnique({
-    where: { id: params.id },
+    where: { id: placeId },
     include: { admins: { include: { user: true } }, events: true },
   });
   if (!place) {
@@ -16,8 +21,9 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id: placeId } = await params;
   const { userId } = await requireUser();
   if (!(await isSuperAdmin(userId))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -31,7 +37,7 @@ export async function PATCH(
     );
   }
   const place = await prisma.place.update({
-    where: { id: params.id },
+    where: { id: placeId },
     data: parsed.data,
   });
   return NextResponse.json(place);
