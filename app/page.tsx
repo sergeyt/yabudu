@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Link } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PlacePicker from "@/components/PlacePicker";

@@ -107,9 +107,13 @@ export default function RegisterPanel({
 
   if (!event) {
     return (
-      <Box borderWidth="1px" rounded="xl" p={4} bg="white">
-        <Text fontSize="sm">{t("no_upcoming_event")}</Text>
-      </Box>
+      <Card.Root>
+        <Card.Body p={4}>
+          <Text fontSize="sm" color="text">
+            {t("no_upcoming_event")}
+          </Text>
+        </Card.Body>
+      </Card.Root>
     );
   }
 

@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Container } from "@chakra-ui/react";
 import { Provider as UIProvider } from "@/components/ui/provider";
 import { NextAuthProvider } from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <UIProvider>
             <NextAuthProvider>
               <Container maxW="md" maxH="full">
+                <Toaster />
                 {children}
               </Container>
             </NextAuthProvider>
