@@ -5,8 +5,11 @@ import { canRegisterNow } from "@/lib/util";
 import { notifyEventChange } from "@/lib/notify";
 
 // register
-export async function POST(_: Request, { params }: { params: { id: string } }) {
-  const { id: eventId } = params;
+export async function POST(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id: eventId } = await params;
   const { userId } = await requireUser();
 
   let outcome: "CONFIRMED" | "RESERVED" | null = null;
@@ -56,7 +59,7 @@ export async function POST(_: Request, { params }: { params: { id: string } }) {
   // Fire-and-forget (no await inside response if you prefer)
   try {
     await notifyEventChange({
-      eventId: params.id,
+      eventId,
       type: outcome === "CONFIRMED" ? "REGISTERED" : "WAITLISTED",
       actorName,
     });
@@ -68,8 +71,9 @@ export async function POST(_: Request, { params }: { params: { id: string } }) {
 // unregister
 export async function DELETE(
   _: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id: eventId } = await params;
   const { userId } = await requireUser();
 
   let actorName: string | null = null;
@@ -82,22 +86,22 @@ export async function DELETE(
 
     await tx.registration
       .delete({
-        where: { userId_eventId: { userId, eventId: params.id } },
+        where: { userId_eventId: { userId, eventId } },
       })
       .catch(() => {});
 
-    const event = await tx.event.findUnique({ where: { id: params.id } });
+    const event = await tx.event.findUnique({ where: { id: eventId } });
     if (!event) {
       return;
     }
 
     const confirmedCap = event.capacity ?? Number.POSITIVE_INFINITY;
     const confirmedCount = await tx.registration.count({
-      where: { eventId: params.id, status: "CONFIRMED" },
+      where: { eventId, status: "CONFIRMED" },
     });
     if (confirmedCount < confirmedCap) {
       const nextWait = await tx.registration.findFirst({
-        where: { eventId: params.id, status: "RESERVED" },
+        where: { eventId, status: "RESERVED" },
         orderBy: { createdAt: "asc" },
       });
       if (nextWait) {
@@ -117,13 +121,13 @@ export async function DELETE(
   // notify channel about unregistration
   try {
     await notifyEventChange({
-      eventId: params.id,
+      eventId,
       type: "UNREGISTERED",
       actorName,
     });
     if (wasPromoted) {
       await notifyEventChange({
-        eventId: params.id,
+        eventId,
         type: "PROMOTED",
         promotedName,
       });
