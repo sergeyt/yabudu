@@ -94,6 +94,8 @@ model Event {
   id              String   @id @default(cuid())
   title           String
   description     String?
+  // it could be also used for RTTF tournaments
+  infoUrl         String?
   startAt         DateTime
   placeId         String
   place           Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
