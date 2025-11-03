@@ -33,7 +33,7 @@ export default async function Home({
     : null;
 
   return (
-    <Box as="main" display="grid" gap={4}>
+    <Box as="main" display="grid" gap={4} bg="bg">
       <HomePromo />
       {user?.id && (
         <Box px={3}>

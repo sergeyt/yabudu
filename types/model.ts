@@ -11,6 +11,8 @@ export type Registration = {
   id: string;
   userId: string;
   status: RegistrationStatus;
+  createdAt: DateLike;
+  user?: { name?: string | null; email?: string | null; image?: string | null };
 };
 
 export type WorldEvent = {

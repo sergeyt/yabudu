@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Badge, Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Badge, Box, Button, Heading, HStack, Text } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
@@ -133,7 +133,7 @@ export default function RegisterPanel({
 
   const renderTitle = () => {
     const at = formatEventDate(event.startAt, { t, locale: "ru" });
-    // render info about capacity
+    // TODO render info about capacity
     /*
       {typeof event.capacity === "number" && (
             <Badge>Capacity {event.capacity}</Badge>
@@ -145,9 +145,9 @@ export default function RegisterPanel({
     return (
       <HStack w="full" justifyContent="space-between">
         <HStack>
-          <Text fontWeight="medium" color="gray.700">
+          <Heading size="md" color="text">
             {event.title}
-          </Text>
+          </Heading>
           <Box color="gray.400">{at}</Box>
         </HStack>
         {renderCounts()}

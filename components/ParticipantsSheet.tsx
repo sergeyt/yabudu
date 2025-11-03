@@ -10,17 +10,15 @@ import {
   Text,
   VStack,
   CloseButton,
+  Stack,
 } from "@chakra-ui/react";
 import { api } from "@/lib/api";
-import { RegistrationStatus, type WorldEvent } from "@/types/model";
+import {
+  type Registration,
+  RegistrationStatus,
+  type WorldEvent,
+} from "@/types/model";
 import { useTranslations } from "next-intl";
-
-type Item = {
-  id: string;
-  status: "CONFIRMED" | "RESERVED";
-  user?: { name?: string | null; email?: string | null; image?: string | null };
-  createdAt: string | Date;
-};
 
 export default function ParticipantsSheet({
   event,
@@ -30,7 +28,7 @@ export default function ParticipantsSheet({
   trigger: any;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [regs, setRegs] = useState<Item[]>(event.regs);
+  const [regs, setRegs] = useState(event.regs || []);
   const t = useTranslations("participants");
 
   const { confirmed, reserved } = useMemo(() => {
@@ -49,7 +47,36 @@ export default function ParticipantsSheet({
     setIsOpen(true);
   };
 
-  // TODO extract function to render the list
+  const renderList = (regs: Registration[], label: string) => (
+    <Stack gap={2}>
+      <Text fontSize="sm">
+        {label} ({regs.length})
+      </Text>
+      <VStack align="stretch" gap={3} maxH="30dvh" overflowY="auto" mb={4}>
+        {regs.map((it) => (
+          <HStack key={it.id} borderWidth="1px" rounded="xl" p={3}>
+            <Avatar.Root size="sm">
+              <Avatar.Fallback name={it.user?.name ?? "Anonymous"} />
+              <Avatar.Image src={it.user?.image ?? undefined} />
+            </Avatar.Root>
+            <Box flex="1">
+              <Text fontSize="sm" fontWeight="medium">
+                {it.user?.name ?? "Anonymous"}
+              </Text>
+              {it.user?.email && (
+                <Text fontSize="xs" color="gray.500">
+                  {it.user.email}
+                </Text>
+              )}
+            </Box>
+            <Text fontSize="xs" color="gray.500">
+              {new Date(it.createdAt).toLocaleTimeString()}
+            </Text>
+          </HStack>
+        ))}
+      </VStack>
+    </Stack>
+  );
 
   return (
     <Drawer.Root
@@ -76,65 +103,13 @@ export default function ParticipantsSheet({
             </Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
-            <Text fontSize="sm" color="gray.600" mb={2}>
-              {t("confirmed_label")} ({confirmed.length})
-            </Text>
-            <VStack
-              align="stretch"
-              gap={3}
-              maxH="30dvh"
-              overflowY="auto"
-              mb={4}
-            >
-              {confirmed.map((it) => (
-                <HStack key={it.id} borderWidth="1px" rounded="xl" p={3}>
-                  <Avatar.Root size="sm">
-                    <Avatar.Fallback name={it.user?.name ?? "Anonymous"} />
-                    <Avatar.Image src={it.user?.image ?? undefined} />
-                  </Avatar.Root>
-                  <Box flex="1">
-                    <Text fontSize="sm" fontWeight="medium">
-                      {it.user?.name ?? "Anonymous"}
-                    </Text>
-                    {it.user?.email && (
-                      <Text fontSize="xs" color="gray.500">
-                        {it.user.email}
-                      </Text>
-                    )}
-                  </Box>
-                  <Text fontSize="xs" color="gray.500">
-                    {new Date(it.createdAt).toLocaleTimeString()}
-                  </Text>
-                </HStack>
-              ))}
-            </VStack>
-            <Separator />
-            <Text fontSize="sm" color="gray.600" mt={4} mb={2}>
-              {t("reserved_label")} ({reserved.length})
-            </Text>
-            <VStack align="stretch" gap={3} maxH="30dvh" overflowY="auto">
-              {reserved.map((it) => (
-                <HStack key={it.id} borderWidth="1px" rounded="xl" p={3}>
-                  <Avatar.Root size="sm">
-                    <Avatar.Fallback name={it.user?.name ?? "Anonymous"} />
-                    <Avatar.Image src={it.user?.image ?? undefined} />
-                  </Avatar.Root>
-                  <Box flex="1">
-                    <Text fontSize="sm" fontWeight="medium">
-                      {it.user?.name ?? "Anonymous"}
-                    </Text>
-                    {it.user?.email && (
-                      <Text fontSize="xs" color="gray.500">
-                        {it.user.email}
-                      </Text>
-                    )}
-                  </Box>
-                  <Text fontSize="xs" color="gray.500">
-                    {new Date(it.createdAt).toLocaleTimeString()}
-                  </Text>
-                </HStack>
-              ))}
-            </VStack>
+            {renderList(confirmed, t("confirmed_label"))}
+            {!!reserved.length && (
+              <>
+                <Separator />
+                {renderList(reserved, t("reserved_label"))}
+              </>
+            )}
           </Drawer.Body>
         </Drawer.Content>
       </Drawer.Positioner>

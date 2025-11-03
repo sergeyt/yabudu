@@ -28,13 +28,14 @@ export default function PlacePicker({ places, currentId }: Props) {
 
   return (
     <HStack>
-      <Text m={0} fontSize="sm">
+      <Text m={0} fontSize="sm" color="text">
         {t("label")}:&nbsp;
       </Text>
       <Select.Root size="sm">
         <Select.Field
           px={2}
           value={currentId}
+          color="text"
           onChange={(e) => {
             const p = new URLSearchParams(params);
             p.set("place", e.target.value);

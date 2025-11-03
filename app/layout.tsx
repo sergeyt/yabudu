@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <NextIntlClientProvider>
           <UIProvider>
             <NextAuthProvider>
-              <Container maxW="md" py={4}>
+              <Container maxW="md" maxH="full">
                 {children}
               </Container>
             </NextAuthProvider>

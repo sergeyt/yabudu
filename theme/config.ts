@@ -1,6 +1,12 @@
 "use client";
 
-import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+import {
+  createSystem,
+  defaultConfig,
+  defineConfig,
+  Text,
+  Heading,
+} from "@chakra-ui/react";
 import { buttonRecipe } from "@/theme/recipes/button.recipe";
 
 export const colors = {
@@ -205,3 +211,11 @@ export const config = defineConfig({
 });
 
 export const system = createSystem(defaultConfig, config);
+
+// TODO find a better way
+(Text as any).defaultProps = {
+  color: "text",
+};
+(Heading as any).defaultProps = {
+  color: "text",
+};

@@ -2,9 +2,16 @@
 
 import { useMemo } from "react";
 import { signIn } from "next-auth/react";
-import { Stack, IconButton, Image, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Stack,
+  IconButton,
+  Image,
+  Wrap,
+  WrapItem,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
-import { Tooltip } from "@/components/ui/tooltip";
 import { useColorModeValue } from "@/components/ui/color-mode";
 
 export default function SignIn() {
@@ -39,13 +46,12 @@ export default function SignIn() {
       <Wrap gap={3} justify="center">
         {providers.map(({ id, label, icon }) => (
           <WrapItem key={id}>
-            <Tooltip content={label} openDelay={250}>
+            <HStack cursor="pointer" onClick={() => signIn(id)}>
               <IconButton
                 aria-label={label}
                 variant="outline"
                 size="lg"
                 rounded="full"
-                onClick={() => signIn(id)}
                 bg={bg}
                 borderColor={border}
                 boxShadow={shadow}
@@ -66,7 +72,8 @@ export default function SignIn() {
                   borderRadius="full"
                 />
               </IconButton>
-            </Tooltip>
+              <Text color="text">{label}</Text>
+            </HStack>
           </WrapItem>
         ))}
       </Wrap>
