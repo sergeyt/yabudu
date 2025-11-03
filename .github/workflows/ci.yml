@@ -1,0 +1,27 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          persist-credentials: false
+
+      - name: set up node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: "22"
+
+      - name: lint and build
+        run: pnpm install && pnpm lint && pnpm build
