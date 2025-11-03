@@ -4,6 +4,7 @@ import { prisma } from "./prisma";
 import VkProvider from "next-auth/providers/vk";
 import YandexProvider from "next-auth/providers/yandex";
 import type { OAuthConfig } from "next-auth/providers/oauth";
+import { isDefined } from "./util";
 
 // Generic OIDC provider factory (Sber ID, TBank/Tinkoff ID)
 function OIDCProvider(
@@ -47,27 +48,35 @@ export const authConfig: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
   providers: [
-    YandexProvider({
-      clientId: process.env.YANDEX_CLIENT_ID!,
-      clientSecret: process.env.YANDEX_CLIENT_SECRET!,
-    }),
-    VkProvider({
-      clientId: process.env.VK_CLIENT_ID!,
-      clientSecret: process.env.VK_CLIENT_SECRET!,
-    }),
-    OIDCProvider(
-      "sber",
-      process.env.SBER_ISSUER!,
-      process.env.SBER_CLIENT_ID!,
-      process.env.SBER_CLIENT_SECRET!,
-    ),
-    OIDCProvider(
-      "tbank",
-      process.env.TBANK_ISSUER!,
-      process.env.TBANK_CLIENT_ID!,
-      process.env.TBANK_CLIENT_SECRET!,
-    ),
-  ],
+    process.env.YANDEX_CLIENT_ID && process.env.YANDEX_CLIENT_SECRET
+      ? YandexProvider({
+          clientId: process.env.YANDEX_CLIENT_ID,
+          clientSecret: process.env.YANDEX_CLIENT_SECRET,
+        })
+      : null,
+    process.env.VK_CLIENT_ID && process.env.VK_CLIENT_SECRET
+      ? VkProvider({
+          clientId: process.env.VK_CLIENT_ID,
+          clientSecret: process.env.VK_CLIENT_SECRET,
+        })
+      : null,
+    process.env.SBER_CLIENT_ID && process.env.SBER_CLIENT_SECRET
+      ? OIDCProvider(
+          "sber",
+          process.env.SBER_ISSUER!,
+          process.env.SBER_CLIENT_ID,
+          process.env.SBER_CLIENT_SECRET,
+        )
+      : null,
+    process.env.TBANK_CLIENT_ID && process.env.TBANK_CLIENT_SECRET
+      ? OIDCProvider(
+          "tbank",
+          process.env.TBANK_ISSUER!,
+          process.env.TBANK_CLIENT_ID,
+          process.env.TBANK_CLIENT_SECRET,
+        )
+      : null,
+  ].filter(isDefined),
   pages: { signIn: "/" },
   callbacks: {
     async session({ session, user }: any) {
