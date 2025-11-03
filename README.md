@@ -15,9 +15,6 @@ Built with **Chakra UI**, fully deployable on **Vercel**.
 - **OAuth login:** Yandex ID, VK ID, Sber ID, TBank ID (Tinkoff ID)
 - **Event registration rules:** only within 24h before event start
 - **Dual capacities:** confirmed + reserved waitlist
-- **Admin panel:** per-place admins can create and manage events
-- **Super-admin panel:** manage places (name, description, info URL)
-- **RTTF profile integration:** fetch external player info dynamically
 - **Prisma ORM** with SQLite/Postgres support
 - **NextAuth v5** with Prisma adapter
 - **Chakra UI** mobile-first responsive design
@@ -51,14 +48,15 @@ pnpm install
 Create `.env.local`:
 
 ```bash
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_random_long_secret
-
 # Database
 DATABASE_URL="file:./dev.db"
 # provider must be a literal string for IntelliJ
 # provider = "sqlite" or "postgresql"
+
+# NextAuth
+AUTH_URL=http://localhost:3000
+AUTH_SECRET=your_random_long_secret
+AUTH_TRUST_HOST=true
 
 # OAuth credentials
 YANDEX_CLIENT_ID=...
@@ -155,32 +153,6 @@ enum UserRole {
 }
 ```
 
----
-
-## 🧑‍💻 Admin & Super-Admin
-
-| Role            | Abilities                                                 |
-| --------------- | --------------------------------------------------------- |
-| **User**        | Register/unregister for events                            |
-| **Place Admin** | Create events, manage waitlists, assign other admins      |
-| **Super-Admin** | Create/edit places (description, info URL), manage admins |
-
-### Panels
-
-* `/admin` — per-place admin dashboard
-* `/superadmin/places` — super-admin dashboard
-
-Both built with **Chakra UI** forms and guards (`AdminGate`, `SuperAdminGate`).
-
----
-
-## 🏓 RTTF Integration
-
-Users can store an optional `rttfProfileUrl` (link to their public table-tennis federation profile).
-Server action `fetchRttfProfile(userId)` can be used to pull external data (e.g. rank, stats) from RTTF pages.
-
----
-
 ## 🧪 Development
 
 ```bash
@@ -205,7 +177,7 @@ App runs at [http://localhost:3000](http://localhost:3000)
 * All registration actions are protected by **NextAuth sessions**
 * Server actions only execute with authenticated users
 * No client-side access to Prisma or secrets
-* Use HTTPS + strong `NEXTAUTH_SECRET` in production
+* Use HTTPS + strong `AUTH_SECRET` in production
 
 ---
 
