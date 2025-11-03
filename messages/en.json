@@ -12,6 +12,53 @@
     "label": "Where"
   },
   "register": {
-    "no_upcoming_event": "No upcoming event for this place."
+    "no_upcoming_event": "No upcoming event for this place.",
+
+    "today": "Today at",
+    "tomorrow": "Tomorrow at",
+
+    "register_label1": "Register",
+    "register_label2": "Let's go!",
+    "register_label3": "I'm with you!",
+    "register_label4": "Count me in!",
+    "register_label5": "Sign me up!",
+    "register_label6": "Adventure awaits!",
+    "register_label7": "Heck yes!",
+    "register_label8": "Beam me up!",
+    "register_label9": "I’m so in!",
+    "register_label10": "Ready to roll!",
+
+    "unregister_label1": "Unregister",
+    "unregister_label2": "Cancel",
+    "unregister_label3": "Not this time",
+    "unregister_label4": "Maybe later",
+    "unregister_label5": "I’m out",
+    "unregister_label6": "Abort mission!",
+    "unregister_label7": "Count me out",
+    "unregister_label8": "Rain check?",
+    "unregister_label9": "Never mind",
+    "unregister_label10": "Backing out gracefully",
+
+    "join_label1": "Join Waitlist",
+    "join_label2": "Add me in!",
+    "join_label3": "Save my spot!",
+    "join_label4": "I’ll wait!",
+    "join_label5": "Keep me posted!",
+    "join_label6": "Count me on standby!",
+    "join_label7": "Queue me up!",
+    "join_label8": "Hold the door!",
+    "join_label9": "Reserving my seat!",
+    "join_label10": "Put me on the list!",
+
+    "leave_label1": "Leave Waitlist",
+    "leave_label2": "Never mind",
+    "leave_label3": "I’ll pass",
+    "leave_label4": "Take me off the list",
+    "leave_label5": "Cancel my spot",
+    "leave_label6": "No longer waiting",
+    "leave_label7": "Remove me, please",
+    "leave_label8": "Free my seat",
+    "leave_label9": "Standing down",
+    "leave_label10": "Out of the queue"
   }
 }

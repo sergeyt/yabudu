@@ -12,6 +12,53 @@
     "label": "Где"
   },
   "register": {
-    "no_upcoming_event": "Нет ближайшего события."
+    "no_upcoming_event": "Нет ближайшего события.",
+
+    "today": "Сегодня в",
+    "tomorrow": "Завтра в",
+
+    "register_label1": "Зарегистрироваться",
+    "register_label2": "Поехали!",
+    "register_label3": "Я с вами!",
+    "register_label4": "Запишите меня!",
+    "register_label5": "Я в деле!",
+    "register_label6": "Приключения ждут!",
+    "register_label7": "Да, конечно!",
+    "register_label8": "Телепортируюсь туда!",
+    "register_label9": "Буду обязательно!",
+    "register_label10": "Готов к старту!",
+
+    "unregister_label1": "Отменить регистрацию",
+    "unregister_label2": "Отмена",
+    "unregister_label3": "Не в этот раз",
+    "unregister_label4": "Может, потом",
+    "unregister_label5": "Я выбываю",
+    "unregister_label6": "Отбой миссии!",
+    "unregister_label7": "Без меня",
+    "unregister_label8": "Переносим?",
+    "unregister_label9": "Передумал(а)",
+    "unregister_label10": "Выход по-английски",
+
+    "join_label1": "Встать в лист ожидания",
+    "join_label2": "Добавьте меня!",
+    "join_label3": "Забронируйте место!",
+    "join_label4": "Я подожду!",
+    "join_label5": "Держите меня в курсе!",
+    "join_label6": "Запишите в запас!",
+    "join_label7": "Поставьте в очередь!",
+    "join_label8": "Придержите место!",
+    "join_label9": "Резерв за мной!",
+    "join_label10": "В список, пожалуйста!",
+
+    "leave_label1": "Покинуть лист ожидания",
+    "leave_label2": "Неважно",
+    "leave_label3": "Я передумал(а)",
+    "leave_label4": "Уберите меня из списка",
+    "leave_label5": "Отменить резерв",
+    "leave_label6": "Больше не жду",
+    "leave_label7": "Удалите меня, пожалуйста",
+    "leave_label8": "Освобождаю место",
+    "leave_label9": "Выбываю из очереди",
+    "leave_label10": "Минус один в списке"
   }
 }

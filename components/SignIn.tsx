@@ -14,15 +14,15 @@ export default function SignIn() {
     () =>
       [
         { id: "yandex", icon: "/icons/yandex.svg" },
-        { id: "vk", label: "Sign in with VK", icon: "/icons/vk.svg" },
-        {
-          id: "sber",
-          icon: "/icons/sber.svg",
-        },
-        {
-          id: "tbank",
-          icon: "/icons/tbank.svg",
-        },
+        // { id: "vk", label: "Sign in with VK", icon: "/icons/vk.svg" },
+        // {
+        //   id: "sber",
+        //   icon: "/icons/sber.svg",
+        // },
+        // {
+        //   id: "tbank",
+        //   icon: "/icons/tbank.svg",
+        // },
       ].map((p) => ({ ...p, label: t(p.id) })),
     [t],
   );

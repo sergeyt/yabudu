@@ -8,48 +8,81 @@ import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
 import {
   type DateLike,
+  type Opt,
   type Registration,
   RegistrationStatus,
+  type WorldEvent,
 } from "@/types/model";
 import { countBy, toDateTime } from "@/lib/util";
 import ParticipantsSheet from "./ParticipantsSheet";
 
-function within24h(startAt: string) {
-  const start = new Date(startAt);
+function within24h(startAt: DateLike) {
+  const start = toDateTime(startAt).toJSDate();
   const openAt = new Date(start.getTime() - 24 * 60 * 60 * 1000);
   const now = new Date();
   return now >= openAt && now < start;
 }
 
-export function formatEventDate(dateInput: DateLike): string {
+const formatCap = (val: number) => (Number.isFinite(val) ? val : "∞");
+
+function formatEventDate(
+  dateInput: DateLike,
+  options: {
+    t: (key: string) => string;
+    locale: string;
+  },
+): string {
+  const { t, locale } = options;
   const dt = toDateTime(dateInput);
   const now = DateTime.local();
   const time = dt.toFormat("HH:mm");
 
   if (dt.hasSame(now, "day")) {
-    return `Today at ${time}`;
+    return `${t("today")} ${time}`;
   }
 
   if (dt.hasSame(now.plus({ days: 1 }), "day")) {
-    return `Tomorrow at ${time}`;
+    return `${t("tomorrow")} ${time}`;
   }
 
   // otherwise → short month and day (include year if different)
   const includeYear = dt.year !== now.year;
-  const date = dt.toFormat(includeYear ? "MMM d, yyyy" : "MMM d");
+  const date = dt.toFormat(includeYear ? "MMM d, yyyy" : "MMM d", { locale });
   return `${date} at ${time}`;
+}
+
+function useRandomLabel(labels: string[]) {
+  return useState(() => labels[Math.floor(Math.random() * labels.length)])[0];
 }
 
 export default function RegisterPanel({
   event,
   userId,
 }: {
-  event: any | null;
+  event: Opt<WorldEvent>;
   userId: string;
 }) {
   const [isPending, startTransition] = useTransition();
   const [regs, setRegs] = useState<Registration[]>(event?.regs ?? []);
   const t = useTranslations("register");
+
+  const labelVariants = useMemo(() => {
+    const digits = Array.from({ length: 10 }, (_, i) => i + 1);
+    const register = digits.map((k) => t(`register_label${k}`));
+    const unregister = digits.map((k) => t(`unregister_label${k}`));
+    const join = digits.map((k) => t(`join_label${k}`));
+    const leave = digits.map((k) => t(`leave_label${k}`));
+    return {
+      register,
+      unregister,
+      join,
+      leave,
+    };
+  }, [t]);
+  const registerLabel = useRandomLabel(labelVariants.register);
+  const unregisterLabel = useRandomLabel(labelVariants.unregister);
+  const joinLabel = useRandomLabel(labelVariants.join);
+  const leaveLabel = useRandomLabel(labelVariants.leave);
 
   const { confirmedCount, reservedCount, myReg, canReg } = useMemo(() => {
     const counts = countBy(regs, "status", {
@@ -81,23 +114,24 @@ export default function RegisterPanel({
   const reserveFull = reservedCount >= reserveCap;
 
   const renderCounts = () => {
-    return (
-      <HStack>
-        <Badge colorScheme={confirmedFull ? "red" : "green"}>
+    const trigger = (
+      <HStack cursor="pointer">
+        <Badge colorScheme={confirmedFull ? "red" : "green"} px={1}>
           {confirmedCount}
-          {reservedCount > 0 && <>({reservedCount})</>}
-          {Number.isFinite(confirmedCap) ? event.capacity : "∞"}
-        </Badge>
-        <Badge colorScheme={reserveFull ? "red" : "purple"}>
-          {reservedCount}/
-          {Number.isFinite(reserveCap) ? event.reserveCapacity : "∞"}
+          {reservedCount > 0 && (
+            <>
+              ({reservedCount}/{formatCap(reserveCap)})
+            </>
+          )}
+          /{formatCap(confirmedCap)}
         </Badge>
       </HStack>
     );
+    return <ParticipantsSheet event={event} trigger={trigger} />;
   };
 
   const renderTitle = () => {
-    const at = formatEventDate(event.startAt);
+    const at = formatEventDate(event.startAt, { t, locale: "ru" });
     // render info about capacity
     /*
       {typeof event.capacity === "number" && (
@@ -110,8 +144,10 @@ export default function RegisterPanel({
     return (
       <HStack w="full" justifyContent="space-between">
         <HStack>
-          <Text fontWeight="medium">{event.title}</Text>
-          <Box>{at}</Box>
+          <Text fontWeight="medium" color="gray.700">
+            {event.title}
+          </Text>
+          <Box color="gray.400">{at}</Box>
         </HStack>
         {renderCounts()}
       </HStack>
@@ -145,11 +181,11 @@ export default function RegisterPanel({
       ? confirmedFull
         ? reserveFull
           ? "Full"
-          : "Join Waitlist"
-        : "Register"
+          : joinLabel
+        : registerLabel
       : myReg.status === RegistrationStatus.CONFIRMED
-        ? "Unregister"
-        : "Leave Waitlist";
+        ? unregisterLabel
+        : leaveLabel;
     return (
       <Button
         onClick={myReg ? unregister : register}
@@ -196,17 +232,6 @@ export default function RegisterPanel({
     );
   };
 
-  const renderLinks = () => {
-    return (
-      <HStack gap={1}>
-        <ParticipantsSheet event={event} />
-        <Link href="/admin" fontSize="xs" color="blue.600">
-          Admin
-        </Link>
-      </HStack>
-    );
-  };
-
   return (
     <Box borderWidth="1px" rounded="xl" p={4} bg="white" display="grid" gap={3}>
       {renderTitle()}
@@ -214,7 +239,6 @@ export default function RegisterPanel({
         {renderCTA()}
         {renderError()}
       </Box>
-      <Box>{renderLinks()}</Box>
     </Box>
   );
 }

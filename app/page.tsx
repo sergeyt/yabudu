@@ -43,12 +43,6 @@ export default async function Home({
       ) : (
         <RegisterPanel event={upcomingEvent} userId={user.id} />
       )}
-      {user?.id && (
-        <Box fontSize="xs" color="gray.600">
-          <Link href="/admin">Admin</Link> ·{" "}
-          <Link href="/superadmin/places">Super-admin</Link>
-        </Box>
-      )}
     </Box>
   );
 }

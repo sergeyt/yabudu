@@ -4,7 +4,6 @@ import React, { useMemo, useState } from "react";
 import {
   Avatar,
   Box,
-  Button,
   Separator,
   Drawer,
   HStack,
@@ -13,6 +12,7 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { api } from "@/lib/api";
+import type { WorldEvent } from "@/types/model";
 
 type Item = {
   id: string;
@@ -23,18 +23,25 @@ type Item = {
 
 export default function ParticipantsSheet({
   event,
+  trigger,
 }: {
-  // TODO typed event
-  event: any | null;
+  event: WorldEvent;
+  trigger: any;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [regs, setRegs] = useState<Item[]>(event?.regs ?? []);
+  const [regs, setRegs] = useState<Item[]>(event.regs);
 
   const { confirmed, reserved } = useMemo(() => {
     const confirmed = regs.filter((p) => p.status === "CONFIRMED");
     const reserved = regs.filter((p) => p.status === "RESERVED");
     return { confirmed, reserved };
   }, [regs]);
+
+  const show = async () => {
+    const regs = await api.events.participants(event.id);
+    setRegs(regs);
+    setIsOpen(true);
+  };
 
   return (
     <Drawer.Root
@@ -46,17 +53,9 @@ export default function ParticipantsSheet({
     >
       <Drawer.Backdrop />
       <Drawer.Trigger asChild>
-        <Button
-          variant="link"
-          size="sm"
-          onClick={async () => {
-            const regs = await api.events.participants(event.id);
-            setRegs(regs);
-            setIsOpen(true);
-          }}
-        >
-          Participants
-        </Button>
+        {React.cloneElement(trigger, {
+          onClick: show,
+        })}
       </Drawer.Trigger>
       <Drawer.Positioner>
         <Drawer.Content roundedTop="2xl">
