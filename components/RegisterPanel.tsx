@@ -103,7 +103,7 @@ export default function RegisterPanel({
     const myReg = regs.find((r) => r.userId === userId);
     const canReg = !!event && within24h(event.startAt);
     return { confirmedCount, reservedCount, myReg, canReg };
-  }, [event, regs]);
+  }, [userId, event, regs]);
 
   if (!event) {
     return (
