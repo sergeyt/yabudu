@@ -5,9 +5,9 @@ export type Opt<T> = T | undefined | null;
 export type Place = {
   id: string;
   name: string;
-  description?: string;
-  location?: string;
-  infoUrl?: string;
+  description?: Opt<string>;
+  location?: Opt<string>;
+  infoUrl?: Opt<string>;
   createdAt: DateLike;
   updatedAt: DateLike;
 };
