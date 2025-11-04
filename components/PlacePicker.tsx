@@ -16,6 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
+import { FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
 import type { Place } from "@/types/model";
 import { Tooltip } from "./ui/tooltip";
 
@@ -135,10 +136,25 @@ function PlaceInfo({ place }: { place: Place }) {
             </Text>
           )}
           <Separator my={3} />
-          {/* TODO display as URL icon */}
-          {place.location && (
+          {/* TODO determine if it is URL then display this way */}
+          {!!place.location && (
             <Text>
-              <b>Location:</b> {place.location}
+              <b>Location:</b>{" "}
+              <span>
+                <Tooltip content={place.location}>
+                  <IconButton
+                    aria-label="Place location"
+                    size="sm"
+                    variant="ghost"
+                    cursor="pointer"
+                    onClick={() => {
+                      window.open(place.location as string, "_blank");
+                    }}
+                  >
+                    <LocationIcon />
+                  </IconButton>
+                </Tooltip>
+              </span>
             </Text>
           )}
         </Box>
