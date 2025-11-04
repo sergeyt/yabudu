@@ -97,6 +97,7 @@ model Event {
   // it could be also used for RTTF tournaments
   infoUrl         String?
   startAt         DateTime
+  duration        String?  @default("1h")
   placeId         String
   place           Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())
