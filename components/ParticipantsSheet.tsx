@@ -60,7 +60,7 @@ export default function ParticipantsSheet({
               <Avatar.Image src={it.user?.image ?? undefined} />
             </Avatar.Root>
             <Box flex="1">
-              <Text fontSize="sm" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="medium" color="text">
                 {it.user?.name ?? "Anonymous"}
               </Text>
               {it.user?.email && (
