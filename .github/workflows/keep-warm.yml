@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: Europe/Zurich
-      KEEP_WARM_URL: "https://yabudu.vercel.app"
+      KEEP_WARM_URL: "https://yabudu.vercel.app/api/ping"
     steps:
       - name: Ping keep-warm endpoint with retries
         run: |
