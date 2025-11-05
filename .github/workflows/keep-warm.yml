@@ -1,0 +1,28 @@
+name: Keep Warm
+
+on:
+  schedule:
+    # GitHub Actions minimum reliable interval is 5 minutes (use */5 not */4)
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Zurich
+      KEEP_WARM_URL: "https://yabudu.vercel.app"
+    steps:
+      - name: Ping keep-warm endpoint with retries
+        run: |
+          HDR=""
+          if [ -n "$KEEP_WARM_TOKEN" ]; then
+            HDR="-H 'Authorization: Bearer ${KEEP_WARM_TOKEN}'"
+          fi
+          bash -ceu "
+            for i in 1 2 3; do
+              curl -sS -m 8 -f $HDR \"$KEEP_WARM_URL\" && exit 0
+              sleep $((i * 5))
+            done
+            echo 'Ping failed after retries (non-fatal)'; exit 0
+          "
