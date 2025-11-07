@@ -33,6 +33,28 @@ export default async function Home({
       })
     : null;
 
+  const renderContent = () => {
+    if (!user?.id) {
+      return (
+        <Box p={4}>
+          <SignIn />
+        </Box>
+      );
+    }
+    if (!place) {
+      return <>Select place</>;
+    }
+    return (
+      <Box p={3}>
+        <RegisterPanel
+          event={upcomingEvent as WorldEvent}
+          user={user as any}
+          place={place}
+        />
+      </Box>
+    );
+  };
+
   return (
     <Box as="main" display="grid" gap={4} bg="bg">
       <HomePromo />
@@ -41,19 +63,7 @@ export default async function Home({
           <PlacePicker places={places} currentId={place?.id ?? ""} />
         </Box>
       )}
-      {!user?.id ? (
-        <Box p={4}>
-          <SignIn />
-        </Box>
-      ) : (
-        <Box p={3}>
-          <RegisterPanel
-            event={upcomingEvent as WorldEvent}
-            user={user as any}
-            place={place}
-          />
-        </Box>
-      )}
+      {renderContent()}
     </Box>
   );
 }

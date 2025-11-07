@@ -17,25 +17,20 @@ enum UserRole {
   SUPERADMIN
 }
 
-enum ChatType {
-  MAX
-  TELEGRAM
-}
-
 model User {
-  id              String       @id @default(cuid())
-  name            String?
-  email           String?      @unique
-  emailVerified   DateTime?
-  image           String?
-  rttfProfileUrl  String?
-  role            UserRole     @default(USER)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now())
-  accounts        Account[]
-  sessions        Session[]
-  registrations   Registration[]
-  adminPlaces     PlaceAdmin[]
+  id             String         @id @default(cuid())
+  name           String?
+  email          String?        @unique
+  emailVerified  DateTime?
+  image          String?
+  rttfProfileUrl String?
+  role           UserRole       @default(USER)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now())
+  accounts       Account[]
+  sessions       Session[]
+  registrations  Registration[]
+  adminPlaces    PlaceAdmin[]
 }
 
 model Account {
@@ -67,15 +62,17 @@ model Session {
 }
 
 model Place {
-  id          String       @id @default(cuid())
-  name        String       @unique
+  id          String                     @id @default(cuid())
+  name        String                     @unique
   location    String?
   description String?
   infoUrl     String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now())
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @default(now())
   events      Event[]
   admins      PlaceAdmin[]
+  // default channels under for all events for this place
+  channels    PlaceNotificationChannel[]
 }
 
 model PlaceAdmin {
@@ -91,37 +88,76 @@ model PlaceAdmin {
 }
 
 model Event {
-  id              String   @id @default(cuid())
+  id              String                     @id @default(cuid())
   title           String
   description     String?
   // it could be also used for RTTF tournaments
   infoUrl         String?
   startAt         DateTime
-  duration        String?  @default("1h")
+  duration        String?                    @default("1h")
   placeId         String
-  place           Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now())
+  place           Place                      @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @default(now())
   capacity        Int?
   reserveCapacity Int?
   regs            Registration[]
-  // chat/channel ID to notify
-  chatType        ChatType @default(MAX)
-  chatId          String?
+  channels        EventNotificationChannel[] // overrides/additions specific to this event
 
   @@index([placeId, startAt])
 }
 
 model Registration {
-  id        String              @id @default(cuid())
+  id        String             @id @default(cuid())
   userId    String
   eventId   String
-  status    RegistrationStatus  @default(CONFIRMED)
-  createdAt DateTime            @default(now())
+  status    RegistrationStatus @default(CONFIRMED)
+  createdAt DateTime           @default(now())
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([userId, eventId])
   @@index([eventId, status, createdAt])
+}
+
+enum NotificationChannelType {
+  TELEGRAM
+  WHATSAPP
+  SLACK
+  MAX
+  EMAIL
+  WEBHOOK
+}
+
+model PlaceNotificationChannel {
+  id      String                  @id @default(cuid())
+  placeId String
+  place   Place                   @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  type    NotificationChannelType
+  // For TELEGRAM, store chat id as string; for WEBHOOK, store URL; for EMAIL, store address.
+  target  String
+  // optional metadata (JSON) if you need parse_mode, thread ids, etc.
+  meta    Json?
+  label   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([placeId, type, target]) // prevents duplicates in same scope
+}
+
+model EventNotificationChannel {
+  id      String                  @id @default(cuid())
+  eventId String
+  event   Event                   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  type    NotificationChannelType
+  target  String
+  meta    Json?
+  label   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([eventId, type, target])
 }

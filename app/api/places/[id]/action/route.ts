@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { DateTime } from "luxon";
 import { requireUser } from "@/lib/api-auth";
 import { prisma } from "@/lib/prisma";
-import { NotFoundError, withErrorHandling } from "@/lib/error";
+import { NotFoundError, errorMiddleware } from "@/lib/error";
 
-export const POST = withErrorHandling(
+export const POST = errorMiddleware(
   async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id: placeId } = await params;
     await requireUser();

@@ -6,25 +6,25 @@ import {
   Badge,
   Box,
   Button,
+  Card,
   Heading,
   HStack,
   Text,
-  Card,
 } from "@chakra-ui/react";
-import { DateTime } from "luxon";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/toaster";
 import {
   type DateLike,
   type Opt,
-  Place,
+  type Place,
   type Registration,
   RegistrationStatus,
-  User,
+  type User,
   UserRole,
   type WorldEvent,
 } from "@/types/model";
 import { countBy, toDateTime } from "@/lib/util";
+import { formatCapacity, formatEventDate } from "@/lib/format";
 import ParticipantsSheet from "./ParticipantsSheet";
 import { SuperAdminConsole } from "./SuperAdminConsole";
 
@@ -33,34 +33,6 @@ function within24h(startAt: DateLike) {
   const openAt = new Date(start.getTime() - 24 * 60 * 60 * 1000);
   const now = new Date();
   return now >= openAt && now < start;
-}
-
-const formatCap = (val: number) => (Number.isFinite(val) ? val : "∞");
-
-function formatEventDate(
-  dateInput: DateLike,
-  options: {
-    t: (key: string) => string;
-    locale: string;
-  },
-): string {
-  const { t, locale } = options;
-  const dt = toDateTime(dateInput);
-  const now = DateTime.local();
-  const time = dt.toFormat("HH:mm");
-
-  if (dt.hasSame(now, "day")) {
-    return `${t("today")} ${time}`;
-  }
-
-  if (dt.hasSame(now.plus({ days: 1 }), "day")) {
-    return `${t("tomorrow")} ${time}`;
-  }
-
-  // otherwise → short month and day (include year if different)
-  const includeYear = dt.year !== now.year;
-  const date = dt.toFormat(includeYear ? "MMM d, yyyy" : "MMM d", { locale });
-  return `${date} at ${time}`;
 }
 
 function useRandomLabel(labels: string[]) {
@@ -144,10 +116,10 @@ export default function RegisterPanel({
           {confirmedCount}
           {reservedCount > 0 && (
             <>
-              ({reservedCount}/{formatCap(reserveCap)})
+              ({reservedCount}/{formatCapacity(reserveCap)})
             </>
           )}
-          /{formatCap(confirmedCap)}
+          /{formatCapacity(confirmedCap)}
         </Badge>
       </HStack>
     );

@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { sendMessage as sendMaxMessage } from "./max-message";
+import { ChannelType } from "@/types/model";
+import { getEffectiveChannelsForEvent } from "./effectiveChannels";
+// TODO unify interface of sending message to given chat
+import { sendMessage as sendMaxMessage } from "./transports/max";
+import { sendTelegramMessage } from "./transports/telegram";
 
 type ChangeType = "REGISTERED" | "WAITLISTED" | "UNREGISTERED" | "PROMOTED";
 
@@ -19,9 +23,16 @@ export async function notifyEventChange(opts: {
     where: { id: opts.eventId },
     include: { place: true },
   });
+  if (!event) {
+    // TODO log with winston
+    console.log("Event not found");
+    return;
+  }
 
-  if (!event?.chatId) {
-    // no notifications configured for this event
+  const channels = await getEffectiveChannelsForEvent(event?.id);
+  if (!channels.length) {
+    // TODO log with winston
+    console.log("No connected channels");
     return;
   }
 
@@ -94,5 +105,20 @@ export async function notifyEventChange(opts: {
     lines.push(`… and ${remaining} more`);
   }
 
-  await sendMaxMessage(event.chatId, lines.join("\n"));
+  const message = lines.join("\n");
+
+  for (const channel of channels) {
+    switch (channel.type) {
+      case ChannelType.TELEGRAM:
+        await sendTelegramMessage({
+          chatId: channel.target,
+          parseMode: "MarkdownV2",
+          text: message,
+        });
+        break;
+      case ChannelType.MAX:
+        await sendMaxMessage(channel.target, message);
+        break;
+    }
+  }
 }

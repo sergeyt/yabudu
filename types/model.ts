@@ -47,3 +47,12 @@ export type WorldEvent = {
   reserveCapacity: Opt<number>;
   regs?: Registration[];
 };
+
+export enum ChannelType {
+  TELEGRAM = "TELEGRAM",
+  WHATSAPP = "WHATSAPP",
+  SLACK = "SLACK",
+  MAX = "MAX",
+  EMAIL = "EMAIL",
+  WEBHOOK = "WEBHOOK",
+}

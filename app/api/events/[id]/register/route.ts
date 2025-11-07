@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/api-auth";
 import { canRegisterNow } from "@/lib/util";
-import { notifyEventChange } from "@/lib/notify";
+import { notifyEventChange } from "@/lib/notifications/notify";
 
 // register
 export async function POST(

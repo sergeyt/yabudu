@@ -4,6 +4,10 @@
 - [ ] Ping-pong-house
 - [ ] ЦРНТ
 
+# DOCS
+- [ ] improve readme:
+  - [ ] include all used tools, Sentry is missing
+
 # TESTING
 - [x] yandex sign-in
 - [x] register/unregister

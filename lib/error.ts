@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 
+type ErrorOptions = { code?: string; details?: unknown; cause?: unknown };
+
 export class HttpError extends Error {
   readonly status: number;
   readonly code?: string;
   readonly details?: unknown;
 
-  constructor(
-    status: number,
-    message: string,
-    opts?: { code?: string; details?: unknown; cause?: unknown },
-  ) {
+  constructor(status: number, message: string, opts?: ErrorOptions) {
     super(message);
     this.name = this.constructor.name;
     this.status = status;
@@ -22,29 +20,33 @@ export class HttpError extends Error {
 }
 
 export class NotFoundError extends HttpError {
-  constructor(
-    message = "Not found",
-    opts?: { code?: string; details?: unknown; cause?: unknown },
-  ) {
+  constructor(message = "Not found", opts?: ErrorOptions) {
     super(404, message, opts);
   }
 }
 
 export class BadRequestError extends HttpError {
-  constructor(
-    message = "Bad request",
-    opts?: { code?: string; details?: unknown; cause?: unknown },
-  ) {
+  constructor(message = "Bad request", opts?: ErrorOptions) {
     super(400, message, opts);
+  }
+}
+
+export class ForbiddenError extends HttpError {
+  constructor(message = "Forbidden", opts?: ErrorOptions) {
+    super(403, message, opts);
   }
 }
 
 type Route = (req: Request, ctx?: any) => Promise<any>;
 
-export function withErrorHandling(fn: Route): Route {
+export function errorMiddleware(fn: Route): Route {
   return async (req, ctx) => {
     try {
-      return await fn(req, ctx);
+      const resp = await fn(req, ctx);
+      if (resp === undefined) {
+        return NextResponse.json({ ok: true }, { status: 200 });
+      }
+      return resp;
     } catch (err: any) {
       if (err instanceof HttpError) {
         return NextResponse.json(
