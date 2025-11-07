@@ -1,7 +1,14 @@
-async function http(input: RequestInfo, init?: RequestInit) {
+import { isDefined } from "@/lib/util";
+
+async function http(
+  input: RequestInfo,
+  init?: Omit<RequestInit, "body"> & { body?: any },
+) {
+  const { body, ...initExtra } = init || {};
   const res = await fetch(input, {
-    ...init,
+    ...initExtra,
     headers: { "content-type": "application/json", ...(init?.headers || {}) },
+    ...(isDefined(body) && { body: JSON.stringify(body) }),
   });
   if (!res.ok) {
     throw new Error(
@@ -15,19 +22,23 @@ export const api = {
   places: {
     list: () => http("/api/places"),
     get: (id: string) => http(`/api/places/${id}`),
-    create: (body: any) =>
-      http("/api/places", { method: "POST", body: JSON.stringify(body) }),
+    create: (body: any) => http("/api/places", { method: "POST", body }),
     update: (id: string, body: any) =>
       http(`/api/places/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(body),
+        body,
       }),
     addAdmin: (placeId: string, userEmail: string) =>
       http(`/api/places/${placeId}/admins`, {
         method: "POST",
-        body: JSON.stringify({ userEmail }),
+        body: { userEmail },
       }),
     events: (placeId: string) => http(`/api/places/${placeId}/events`),
+    action: (placeId: string, body: any) =>
+      http(`/api/places/${placeId}/action`, {
+        method: "POST",
+        body,
+      }),
   },
   events: {
     create: (body: any) =>

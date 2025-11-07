@@ -46,8 +46,12 @@ export default async function Home({
           <SignIn />
         </Box>
       ) : (
-        <Box px={3}>
-          <RegisterPanel event={upcomingEvent as WorldEvent} userId={user.id} />
+        <Box p={3}>
+          <RegisterPanel
+            event={upcomingEvent as WorldEvent}
+            user={user as any}
+            place={place}
+          />
         </Box>
       )}
     </Box>

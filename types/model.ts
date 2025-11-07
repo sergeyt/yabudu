@@ -2,6 +2,18 @@ export type DateLike = Date | number | string;
 
 export type Opt<T> = T | undefined | null;
 
+export enum UserRole {
+  USER = "USER",
+  SUPERADMIN = "SUPERADMIN",
+}
+
+export type User = {
+  id: string;
+  email: string;
+  role: UserRole;
+  name: string;
+};
+
 export type Place = {
   id: string;
   name: string;

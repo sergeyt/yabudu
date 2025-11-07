@@ -17,12 +17,16 @@ import { toast } from "@/components/ui/toaster";
 import {
   type DateLike,
   type Opt,
+  Place,
   type Registration,
   RegistrationStatus,
+  User,
+  UserRole,
   type WorldEvent,
 } from "@/types/model";
 import { countBy, toDateTime } from "@/lib/util";
 import ParticipantsSheet from "./ParticipantsSheet";
+import { SuperAdminConsole } from "./SuperAdminConsole";
 
 function within24h(startAt: DateLike) {
   const start = toDateTime(startAt).toJSDate();
@@ -65,15 +69,19 @@ function useRandomLabel(labels: string[]) {
 
 export default function RegisterPanel({
   event,
-  userId,
+  user,
+  place,
 }: {
   event: Opt<WorldEvent>;
-  userId: string;
+  user: User;
+  place: Place;
 }) {
   const [isPending, startTransition] = useTransition();
   const [regs, setRegs] = useState<Registration[]>(event?.regs ?? []);
   const t = useTranslations("register");
   const err = useTranslations("errors");
+
+  const userId = user.id;
 
   const labelVariants = useMemo(() => {
     const digits = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -106,6 +114,9 @@ export default function RegisterPanel({
   }, [userId, event, regs]);
 
   if (!event) {
+    if (user.role === UserRole.SUPERADMIN) {
+      return <SuperAdminConsole user={user} place={place} />;
+    }
     return (
       <Card.Root>
         <Card.Body p={4}>

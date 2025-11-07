@@ -1,5 +1,6 @@
 # EXECUTION PLAN
-- [ ] Дагомыс Арена
+- [x] Дагомыс Арена - failed :)
+  - [x] still not enough motivation between people :)
 - [ ] Ping-pong-house
 - [ ] ЦРНТ
 
@@ -11,18 +12,25 @@
 # BUGS & IMPROVEMENTS
 - [x] hide Place selector if not logged in
 - [x] use SVG icons for sign-in providers
+- [x] super-admin functions:
+  - [x] reuse event for current date (dagomys case)
+  - [ ] time selector
+  - [ ] select place admins
 - [ ] db scripts
   - [x] seed script
+  - [ ] delete events, better event names?
   - [ ] script to generate fake users
   - [ ] script to add registrations to event for fake users 
 - [x] hide sign-in providers if env variables are empty
 - [ ] better design & theme
   - [x] theme switch
   - [x] render card
-  - [ ] place info drawer (including name, description and location URL)
-  - [ ] better place selector preferably with async search
+  - [x] place info drawer (including name, description and location URL)
+  - [x] better place selector preferably with async search
   - [ ] show capacity info in tooltip since usually people already know it. or as a small badge with 3 numbers. registered/capacity/waitlist
-- [ ] refactor: extract model types and reuse in code
+- [x] refactorings:
+  - [x] extract model types and reuse in code, never ending :)
+  - [ ] use typed errors more
 
 # NEW FEATURES
 - [x] internationalization
