@@ -3,13 +3,25 @@ import { DateTime } from "luxon";
 import { requireUser } from "@/lib/api-auth";
 import { prisma } from "@/lib/prisma";
 import { NotFoundError, errorMiddleware } from "@/lib/error";
+import { createLinkCode } from "@/lib/telegramLinkCode";
+
+enum ActionType {
+  REUSE_EVENT = "reuse_event",
+  TELEGRAM_LINK = "telegram_link",
+}
 
 export const POST = errorMiddleware(
   async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id: placeId } = await params;
+    // TODO requireSuperAdmin!
     await requireUser();
     const body = await req.json();
+
     // TODO validate payload
+
+    if (body.type === ActionType.TELEGRAM_LINK) {
+      return generateTelegramLink(placeId);
+    }
 
     await prisma.$transaction(async (tx) => {
       const place = await tx.place.findUnique({ where: { id: placeId } });
@@ -20,7 +32,7 @@ export const POST = errorMiddleware(
       console.log("action payload", body);
 
       switch (body.type) {
-        case "reuse_event": {
+        case ActionType.REUSE_EVENT: {
           const event = await tx.event.findFirst({
             where: { placeId },
             orderBy: { startAt: "desc" },
@@ -40,10 +52,17 @@ export const POST = errorMiddleware(
               startAt,
             },
           });
+          return;
         }
       }
     });
-
-    return NextResponse.json({ ok: true }, { status: 200 });
   },
 );
+
+async function generateTelegramLink(placeId: string) {
+  const code = createLinkCode(placeId, 15 * 60); // 15 min TTL
+  return {
+    code,
+    instructions: `Open Telegram → DM your bot and send:\n/link ${code}`,
+  };
+}

@@ -46,7 +46,10 @@ export function errorMiddleware(fn: Route): Route {
       if (resp === undefined) {
         return NextResponse.json({ ok: true }, { status: 200 });
       }
-      return resp;
+      if (resp instanceof NextResponse) {
+        return resp;
+      }
+      return NextResponse.json(resp, { status: 200 });
     } catch (err: any) {
       if (err instanceof HttpError) {
         return NextResponse.json(

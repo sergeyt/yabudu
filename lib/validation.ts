@@ -26,3 +26,12 @@ export const CreateEvent = z.object({
   reserveCapacity: z.number().int().nonnegative().nullable().optional(),
   chatId: z.string().min(1).optional().nullable(),
 });
+
+enum ActionType {
+  REUSE_EVENT = "reuse_event",
+  TELEGRAM_LINK = "telegram_link",
+}
+
+export const SuperAdminAction = z.object({
+  type: z.enum(ActionType),
+});

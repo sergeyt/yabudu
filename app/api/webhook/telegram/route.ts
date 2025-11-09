@@ -1,5 +1,7 @@
 import { sendTelegramMessage } from "@/lib/notifications/transports/telegram";
 import { ForbiddenError, errorMiddleware } from "@/lib/error";
+import { prisma } from "@/lib/prisma";
+import { verifyLinkCode } from "@/lib/telegramLinkCode";
 
 // Optional shared secret to secure the webhook URL
 const SECRET = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -12,21 +14,104 @@ export const POST = errorMiddleware(
     }
 
     const update = await req.json();
+    const chat = update.message.chat;
+    const chatId: number = chat?.id;
+    const text: string | undefined = update.message.text?.trim();
+    const username = chat?.username || chat?.first_name || "there";
 
-    if (update.message) {
-      const chat = update.message.chat;
-      const chatId = chat.id;
-      const username = chat.username ?? chat.first_name ?? "there";
-
-      // Store chatId in DB if you want to (e.g., linked to Place or user)
-      // await prisma.place.update({ where: { id: "..." }, data: { telegramChatId: String(chatId) } });
-
-      // Reply with the chatId
+    // /start: greet + show chat id
+    if (!text || text === "/start") {
       await sendTelegramMessage({
         chatId,
-        text: `👋 Hi ${username}!\n\nYour chat ID is:\n<code>${chatId}</code>\n\nCopy this ID and paste it into the Place settings in your dashboard.`,
+        text:
+          `👋 Hi ${username}!\n\n` +
+          `Your chat ID is:\n<code>${chatId}</code>\n\n` +
+          `To link a place, send:\n<code>/link &lt;code&gt;</code>\n` +
+          `To unlink, send:\n<code>/unlink &lt;code&gt;</code>`,
+        parseMode: "HTML",
+        disableWebPagePreview: true,
+      });
+      return;
+    }
+
+    // /link <code>
+    if (text.startsWith("/link")) {
+      const [, code] = text.split(/\s+/, 2);
+      if (!code) {
+        await sendTelegramMessage({ chatId, text: "Usage: /link <code>" });
+        return;
+      }
+
+      const v = verifyLinkCode(code);
+      if (!v.ok) {
+        await sendTelegramMessage({
+          chatId,
+          text: `❌ Link failed: ${v.error}`,
+        });
+        return;
+      }
+
+      // Upsert TELEGRAM channel for this place
+      const placeId = v.placeId;
+      const target = String(chatId);
+
+      await prisma.placeNotificationChannel.upsert({
+        where: {
+          placeId_type_target: { placeId, type: "TELEGRAM", target },
+        } as any,
+        update: {},
+        create: { placeId, type: "TELEGRAM", target, label: "Owner" },
+      });
+
+      await sendTelegramMessage({
+        chatId,
+        text: `✅ Linked this chat to Place: <code>${placeId}</code>`,
         parseMode: "HTML",
       });
+
+      return;
     }
+
+    // /unlink <code>
+    if (text.startsWith("/unlink")) {
+      const [, code] = text.split(/\s+/, 2);
+      if (!code) {
+        await sendTelegramMessage({ chatId, text: "Usage: /unlink <code>" });
+        return;
+      }
+
+      const v = verifyLinkCode(code);
+      if (!v.ok) {
+        await sendTelegramMessage({
+          chatId,
+          text: `❌ Unlink failed: ${v.error}`,
+        });
+        return;
+      }
+
+      const placeId = v.placeId;
+      const target = String(chatId);
+
+      const deleted = await prisma.placeNotificationChannel.deleteMany({
+        where: { placeId, type: "TELEGRAM", target },
+      });
+
+      await sendTelegramMessage({
+        chatId,
+        text:
+          deleted.count > 0
+            ? `🗑️ Unlinked this chat from Place: <code>${placeId}</code>`
+            : `ℹ️ No existing link for Place <code>${placeId}</code>`,
+        parseMode: "HTML",
+      });
+
+      return;
+    }
+
+    // Fallback
+    await sendTelegramMessage({
+      chatId,
+      text: `I didn't recognize that.\nTry /link <code> or /unlink <code>.`,
+    });
   },
 );
