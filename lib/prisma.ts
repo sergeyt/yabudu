@@ -1,5 +1,5 @@
-// lib/prisma.ts
 import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -23,6 +23,7 @@ const retryExtension = Prisma.defineExtension((client) =>
           if (retryCount <= 0) {
             return query(args);
           }
+
           let attempt = 0;
           while (true) {
             try {
@@ -32,6 +33,7 @@ const retryExtension = Prisma.defineExtension((client) =>
               if (attempt >= retryCount || !isTransient(err)) {
                 throw err;
               }
+
               const delay = 200 * attempt;
               console.warn(
                 `[Prisma Retry] ${model}.${operation} retry ${attempt}/${retryCount} after ${delay}ms`,
@@ -45,10 +47,29 @@ const retryExtension = Prisma.defineExtension((client) =>
   }),
 );
 
-const base = globalForPrisma.prisma ?? new PrismaClient();
-export const prisma =
-  retryCount > 0 ? (base.$extends(retryExtension) as typeof base) : base;
+function createPrismaClient() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is not set");
+  }
 
+  // Prisma 7: pass a driver adapter instead of datasourceUrl/datasources
+  const adapter = new PrismaPg({ connectionString: url });
+
+  const base = new PrismaClient({
+    adapter,
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  });
+
+  return retryCount > 0 ? (base.$extends(retryExtension) as typeof base) : base;
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+
+// Avoid multiple instances in dev (Next.js HMR)
 if (process.env.NODE_ENV !== "production") {
-  (globalForPrisma as any).prisma = prisma;
+  globalForPrisma.prisma = prisma;
 }
