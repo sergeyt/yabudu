@@ -9,7 +9,9 @@
     "tbank": "Вход через ТБанк"
   },
   "place_picker": {
-    "label": "Где"
+    "label": "Где",
+    "quick_info_title": "Справка",
+    "local_label": "Локация"
   },
   "register": {
     "no_upcoming_event": "Нет ближайшего события.",

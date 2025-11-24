@@ -19,6 +19,7 @@ import { FiInfo } from "react-icons/fi";
 import { FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
 import type { Place } from "@/types/model";
 import { Tooltip } from "./ui/tooltip";
+import type { TranslateFn } from "@/types/misc";
 
 type Props = {
   places: Place[];
@@ -93,10 +94,14 @@ export default function PlacePicker({ places, currentId }: Props) {
                   <CloseButton size="sm" />
                 </Drawer.CloseTrigger>
                 <Drawer.Header>
-                  <Drawer.Title textAlign="center">Quick info</Drawer.Title>
+                  <Drawer.Title textAlign="center">
+                    {t("quick_info_title")}
+                  </Drawer.Title>
                 </Drawer.Header>
                 <Drawer.Body>
-                  {selectedPlace ? <PlaceInfo place={selectedPlace} /> : null}
+                  {selectedPlace ? (
+                    <PlaceInfo t={t} place={selectedPlace} />
+                  ) : null}
                 </Drawer.Body>
               </Drawer.Content>
             </Drawer.Positioner>
@@ -125,7 +130,7 @@ export default function PlacePicker({ places, currentId }: Props) {
 }
 
 // TODO render infoUrl as website icon
-function PlaceInfo({ place }: { place: Place }) {
+function PlaceInfo({ t, place }: { t: TranslateFn; place: Place }) {
   return (
     <>
       {place ? (
@@ -139,7 +144,7 @@ function PlaceInfo({ place }: { place: Place }) {
           {/* TODO determine if it is URL then display this way */}
           {!!place.location && (
             <Text>
-              <b>Location:</b>{" "}
+              <b>{t("local_label")}:</b>{" "}
               <span>
                 <Tooltip content={place.location}>
                   <IconButton

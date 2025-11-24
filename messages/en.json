@@ -9,7 +9,9 @@
     "tbank": "Sign in with TBank ID"
   },
   "place_picker": {
-    "label": "Where"
+    "label": "Where",
+    "quick_info_title": "Quick Info",
+    "local_label": "Location"
   },
   "register": {
     "no_upcoming_event": "No upcoming event for this place.",
