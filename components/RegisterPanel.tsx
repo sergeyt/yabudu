@@ -189,7 +189,7 @@ export default function RegisterPanel({
             : isPending || !canReg || (!myReg && confirmedFull && reserveFull)
         }
         loading={isPending}
-        variant={variant as any}
+        variant={variant}
         cta
       >
         {primaryCta}

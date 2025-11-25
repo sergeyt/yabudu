@@ -4,9 +4,12 @@ import {
   type ButtonProps as ChakraButtonProps,
 } from "@chakra-ui/react";
 
-export interface ButtonProps extends ChakraButtonProps {
+type Variant = ChakraButtonProps["variant"] | "gradient" | "danger" | "warning";
+
+export interface ButtonProps extends Omit<ChakraButtonProps, "variant"> {
   /** Call-to-action preset: big, pill, gradient */
   cta?: boolean;
+  variant?: Variant;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
