@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/app/*": ["./app/*"],
+      "@/ui/*": ["./ui/*"],
       "@/components/*": ["./components/*"],
       "@/lib/*": ["./lib/*"],
       "@/prisma/*": ["./prisma/*"],

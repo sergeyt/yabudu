@@ -2,17 +2,9 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  Heading,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
+import { Badge, Box, HStack, Card } from "@chakra-ui/react";
 import { api } from "@/lib/api";
-import { toast } from "@/components/ui/toaster";
+import { Button, Text, Heading, toast } from "../ui";
 import {
   type DateLike,
   type Opt,
@@ -185,7 +177,7 @@ export default function RegisterPanel({
     const variant = myReg
       ? myReg.status === RegistrationStatus.CONFIRMED
         ? "danger"
-        : "ghost"
+        : "warning"
       : undefined;
     return (
       <Button
@@ -197,8 +189,8 @@ export default function RegisterPanel({
             : isPending || !canReg || (!myReg && confirmedFull && reserveFull)
         }
         loading={isPending}
-        colorScheme={myReg ? undefined : confirmedFull ? "purple" : "blue"}
         variant={variant as any}
+        cta
       >
         {primaryCta}
       </Button>

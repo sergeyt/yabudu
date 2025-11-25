@@ -13,12 +13,11 @@ import {
   Portal,
   Select,
   Separator,
-  Text,
 } from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
 import { FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
+import { Text, Tooltip } from "../ui";
 import type { Place } from "@/types/model";
-import { Tooltip } from "./ui/tooltip";
 import type { TranslateFn } from "@/types/misc";
 
 type Props = {
@@ -58,10 +57,12 @@ export default function PlacePicker({ places, currentId }: Props) {
       >
         <Select.HiddenSelect />
         <HStack gap={1}>
-          <Select.Label>{t("label")}:&nbsp;</Select.Label>
+          <Select.Label>
+            <Text>{t("label")}:&nbsp;</Text>
+          </Select.Label>
           <Select.Control w="full">
             <Select.Trigger pl={2}>
-              <Select.ValueText placeholder="Select place" />
+              <Select.ValueText placeholder="Select place" color="text" />
             </Select.Trigger>
             <Select.IndicatorGroup pr={2}>
               <Select.Indicator />
@@ -73,21 +74,19 @@ export default function PlacePicker({ places, currentId }: Props) {
             placement="bottom"
           >
             <Drawer.Backdrop />
-            <Drawer.Trigger>
-              <Tooltip
-                content={selectedPlace ? "Quick info" : "Select a place first"}
+            <Tooltip
+              content={selectedPlace ? "Quick info" : "Select a place first"}
+            >
+              <IconButton
+                aria-label="Quick info about selected place"
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowInfo(!showInfo)}
+                disabled={!selectedPlace}
               >
-                <IconButton
-                  aria-label="Quick info about selected place"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setShowInfo(!showInfo)}
-                  disabled={!selectedPlace}
-                >
-                  <FiInfo />
-                </IconButton>
-              </Tooltip>
-            </Drawer.Trigger>
+                <FiInfo />
+              </IconButton>
+            </Tooltip>
             <Drawer.Positioner>
               <Drawer.Content>
                 <Drawer.CloseTrigger asChild>
@@ -109,7 +108,7 @@ export default function PlacePicker({ places, currentId }: Props) {
         </HStack>
         <Portal>
           <Select.Positioner>
-            <Select.Content bg="surface">
+            <Select.Content>
               {collection.items.map((framework) => (
                 <Select.Item
                   item={framework}
@@ -117,7 +116,7 @@ export default function PlacePicker({ places, currentId }: Props) {
                   p={2}
                   cursor="pointer"
                 >
-                  {framework.label}
+                  <Text>{framework.label}</Text>
                   <Select.ItemIndicator />
                 </Select.Item>
               ))}

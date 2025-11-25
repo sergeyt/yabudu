@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useState } from "react";
-import { Center, Spinner } from "@chakra-ui/react";
-import { User, UserRole } from "@/types/model";
+import type { ReactNode } from "react";
+import { Center } from "@chakra-ui/react";
+import { type User, UserRole } from "@/types/model";
 
 // TODO can we fetch auth again here?
 export function SuperAdminGate({

@@ -7,11 +7,11 @@ import {
   Separator,
   Drawer,
   HStack,
-  Text,
   VStack,
   CloseButton,
   Stack,
 } from "@chakra-ui/react";
+import { Text } from "../ui";
 import { api } from "@/lib/api";
 import {
   type Registration,

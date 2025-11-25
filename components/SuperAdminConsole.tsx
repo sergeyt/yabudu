@@ -1,9 +1,10 @@
+import { useState } from "react";
 import type { User, Place } from "@/types/model";
 import { useRouter } from "next/navigation";
-import { Button, Card, VStack, Text } from "@chakra-ui/react";
+import { Card, VStack } from "@chakra-ui/react";
+import { Button, Text } from "../ui";
 import { api } from "@/lib/api";
 import { SuperAdminGate } from "./Gate";
-import { useState } from "react";
 
 enum ActionType {
   REUSE_EVENT = "reuse_event",
@@ -54,6 +55,7 @@ export function SuperAdminConsole({
       <Button
         key={type}
         w="full"
+        variant="gradient"
         onClick={async () => {
           const resp = await executeAction(type, place);
           if (!isEmptyResponse(resp)) {
