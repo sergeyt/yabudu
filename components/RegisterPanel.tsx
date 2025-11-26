@@ -2,9 +2,9 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Badge, Box, HStack, Card } from "@chakra-ui/react";
+import { Badge, Box, HStack } from "@chakra-ui/react";
 import { api } from "@/lib/api";
-import { Button, Text, Heading, toast } from "../ui";
+import { Button, Text, Heading, toast, Card } from "@/ui/index";
 import {
   type DateLike,
   type Opt,
@@ -83,10 +83,8 @@ export default function RegisterPanel({
     }
     return (
       <Card.Root>
-        <Card.Body p={4}>
-          <Text fontSize="sm" color="text">
-            {t("no_upcoming_event")}
-          </Text>
+        <Card.Body>
+          <Text fontSize="sm">{t("no_upcoming_event")}</Text>
         </Card.Body>
       </Card.Root>
     );
@@ -223,7 +221,7 @@ export default function RegisterPanel({
   };
 
   return (
-    <Card.Root p={2}>
+    <Card.Root>
       <Card.Header>{renderTitle()}</Card.Header>
       <Card.Body>
         <Box w="full" pt={4}>

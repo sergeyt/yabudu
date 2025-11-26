@@ -1,47 +1,112 @@
-import { forwardRef } from "react";
-import { Box, type BoxProps } from "@chakra-ui/react";
+"use client";
 
-export interface CardProps extends BoxProps {
-  hoverable?: boolean;
-}
+import React from "react";
+import {
+  Card as ChakraCard,
+  type CardRootProps,
+  type CardHeaderProps,
+  type CardBodyProps,
+  type CardFooterProps,
+  type CardTitleProps,
+  type CardDescriptionProps,
+} from "@chakra-ui/react";
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-  (
-    {
-      hoverable = false,
-      bg = "white",
-      borderRadius = "lg",
-      boxShadow = "card",
-      borderWidth = "1px",
-      borderColor = "gray.200",
-      p = 6,
-      transition = "all 0.15s ease-out",
-      _hover,
-      ...rest
-    },
-    ref,
-  ) => (
-    <Box
+// ----------- ROOT -----------
+const Root = React.forwardRef<HTMLDivElement, CardRootProps>(function CardRoot(
+  {
+    bg = "bg.surface",
+    borderRadius = "lg",
+    borderWidth = "1px",
+    borderColor = "border.subtle",
+    boxShadow = "shadow.card",
+    p = 6,
+    ...rest
+  },
+  ref,
+) {
+  return (
+    <ChakraCard.Root
       ref={ref}
       bg={bg}
       borderRadius={borderRadius}
-      boxShadow={boxShadow}
       borderWidth={borderWidth}
       borderColor={borderColor}
+      boxShadow={boxShadow}
       p={p}
-      transition={transition}
-      _hover={
-        hoverable
-          ? {
-              boxShadow: "0 10px 25px rgba(15, 23, 42, 0.15)",
-              transform: "translateY(-2px)",
-              ..._hover,
-            }
-          : _hover
-      }
       {...rest}
     />
-  ),
+  );
+});
+
+// ----------- HEADER -----------
+const Header = React.forwardRef<HTMLDivElement, CardHeaderProps>(
+  function CardHeader({ py = 0, ...rest }, ref) {
+    return <ChakraCard.Header ref={ref} py={py} {...rest} />;
+  },
 );
 
-Card.displayName = "Card";
+// ----------- BODY -----------
+const Body = React.forwardRef<HTMLDivElement, CardBodyProps>(function CardBody(
+  { p = 4, ...rest },
+  ref,
+) {
+  return <ChakraCard.Body ref={ref} p={p} {...rest} />;
+});
+
+// ----------- FOOTER -----------
+const Footer = React.forwardRef<HTMLDivElement, CardFooterProps>(
+  function CardFooter({ pt = 4, ...rest }, ref) {
+    return <ChakraCard.Footer ref={ref} pt={pt} {...rest} />;
+  },
+);
+
+// ----------- TITLE -----------
+const Title = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+  function CardTitle(
+    {
+      color = "text.heading",
+      fontWeight = "semibold",
+      fontSize = "lg",
+      ...rest
+    },
+    ref,
+  ) {
+    return (
+      <ChakraCard.Title
+        ref={ref}
+        color={color}
+        fontWeight={fontWeight}
+        fontSize={fontSize}
+        {...rest}
+      />
+    );
+  },
+);
+
+// ----------- DESCRIPTION -----------
+const Description = React.forwardRef<
+  HTMLParagraphElement,
+  CardDescriptionProps
+>(function CardDescription(
+  { color = "text.body", fontSize = "md", ...rest },
+  ref,
+) {
+  return (
+    <ChakraCard.Description
+      ref={ref}
+      color={color}
+      fontSize={fontSize}
+      {...rest}
+    />
+  );
+});
+
+// Export in Chakra-style namespace
+export const Card = {
+  Root,
+  Header,
+  Body,
+  Footer,
+  Title,
+  Description,
+};

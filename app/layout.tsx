@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <NextIntlClientProvider>
           <UIProvider>
             <NextAuthProvider>
-              <Center maxW="md" minH="100vh">
+              <Center maxW="md" minH="100vh" bg="bg.page">
                 <Toaster />
                 {children}
               </Center>
