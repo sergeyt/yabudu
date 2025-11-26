@@ -41,19 +41,24 @@ export const POST = errorMiddleware(
             throw new NotFoundError("No event in the given place");
           }
 
-          const startAt = DateTime.now()
+          const pivot = DateTime.now();
+          const startAt = pivot
+            .plus({ day: pivot.get("hour") >= 19 ? 1 : 0 })
             .startOf("day")
             .set({ hour: 19 })
             .toJSDate();
 
-          await tx.event.update({
+          const res = await tx.event.update({
             where: { id: event.id },
             data: {
               startAt,
             },
           });
-          return;
+          console.log(res);
+          return res;
         }
+        default:
+          throw new Error(`Unknown action type: ${body.type}`);
       }
     });
   },
