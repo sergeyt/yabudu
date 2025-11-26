@@ -9,10 +9,13 @@ export type LinkProps = ChakraLinkProps;
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   (
     {
-      color = "blue.600",
+      color = "text.link",
       fontWeight = "medium",
       textDecoration = "none",
-      _hover = { textDecoration: "underline" },
+      _hover = {
+        textDecoration: "underline",
+        color: "text.linkHover",
+      },
       ...rest
     },
     ref,

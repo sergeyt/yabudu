@@ -11,7 +11,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
     {
       fontFamily = "heading",
       fontWeight = "semibold",
-      color = "gray.900",
+      color = "text.heading",
       ...rest
     },
     ref,

@@ -1,6 +1,9 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 import { buttonRecipe } from "./button.recipe";
 
+const font =
+  "var(--font-main), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
 // 2) System config with brand tokens + recipes
 const config = defineConfig({
   theme: {
@@ -34,12 +37,10 @@ const config = defineConfig({
       },
       fonts: {
         body: {
-          value:
-            "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          value: font,
         },
         heading: {
-          value:
-            "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          value: font,
         },
       },
       radii: {
@@ -60,6 +61,43 @@ const config = defineConfig({
         lg: { value: "1.125rem" },
         xl: { value: "1.25rem" },
         "2xl": { value: "1.5rem" },
+      },
+    },
+
+    semanticTokens: {
+      colors: {
+        text: {
+          heading: {
+            value: {
+              base: "{colors.gray.800}",
+              _dark: "{colors.gray.100}",
+            },
+          },
+          body: {
+            value: {
+              base: "{colors.gray.700}",
+              _dark: "{colors.gray.200}",
+            },
+          },
+          muted: {
+            value: {
+              base: "{colors.gray.500}",
+              _dark: "{colors.gray.400}",
+            },
+          },
+          link: {
+            value: {
+              base: "{colors.blue.600}", // light mode
+              _dark: "{colors.blue.300}", // dark mode
+            },
+          },
+          linkHover: {
+            value: {
+              base: "{colors.blue.700}",
+              _dark: "{colors.blue.200}",
+            },
+          },
+        },
       },
     },
 

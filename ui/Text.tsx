@@ -15,7 +15,7 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>(
       fontFamily = "body",
       fontSize = "md",
       lineHeight = "tall",
-      color = muted ? "gray.500" : "gray.800",
+      color = muted ? "text.muted" : "text.body",
       ...rest
     } = props;
     return (
