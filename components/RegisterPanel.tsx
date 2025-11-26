@@ -221,7 +221,7 @@ export default function RegisterPanel({
   };
 
   return (
-    <Card.Root>
+    <Card.Root w="full">
       <Card.Header>{renderTitle()}</Card.Header>
       <Card.Body>
         <Box w="full" pt={4}>

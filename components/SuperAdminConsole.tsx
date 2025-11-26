@@ -93,7 +93,7 @@ export function SuperAdminConsole({
 
   const renderConsole = () => {
     return (
-      <Card.Root p={3}>
+      <Card.Root w="full" p={3}>
         <Card.Header color="text" mb={2}>
           SUPER-ADMIN ACTIONS
         </Card.Header>

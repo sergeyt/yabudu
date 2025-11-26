@@ -56,7 +56,7 @@ export default async function Home({
   };
 
   return (
-    <Box as="main" display="grid" gap={4} bg="bg.page">
+    <Box w="full" as="main" display="grid" gap={4} bg="bg.page">
       <HomePromo />
       {user?.id && (
         <Box px={3}>
