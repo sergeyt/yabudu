@@ -9,10 +9,9 @@ import {
   Wrap,
   WrapItem,
   HStack,
-  Text,
 } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
-import { useColorModeValue } from "@/components/ui/color-mode";
+import { useColorModeValue, Text } from "../ui";
 
 export default function SignIn() {
   const t = useTranslations("sign_in");

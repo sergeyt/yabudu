@@ -1,221 +1,275 @@
-"use client";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
+import { buttonRecipe } from "./button.recipe";
 
-import {
-  createSystem,
-  defaultConfig,
-  defineConfig,
-  Text,
-  Heading,
-} from "@chakra-ui/react";
-import { buttonRecipe } from "@/theme/recipes/button.recipe";
+const font =
+  "var(--font-main), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
-export const colors = {
-  gray: {
-    50: "#F9FAFB",
-    100: "#F3F4F6",
-    200: "#E5E7EB",
-    300: "#D1D5DB",
-    400: "#9CA3AF",
-    500: "#6B7280",
-    600: "#4B5563",
-    700: "#374151",
-    800: "#1F2937",
-    900: "#111827",
-  },
-  orange: {
-    50: "#FFF7ED",
-    100: "#FFEDD5",
-    200: "#FED7AA",
-    300: "#FDBA74",
-    400: "#FB923C",
-    500: "#F97316",
-    600: "#EA580C",
-    700: "#C2410C",
-    800: "#9A3412",
-    900: "#7C2D12",
-  },
-  yellow: {
-    50: "#FEFCE8",
-    100: "#FEF9C3",
-    200: "#FEF08A",
-    300: "#FDE047",
-    400: "#FACC15",
-    500: "#EAB308",
-    600: "#CA8A04",
-    700: "#A16207",
-    800: "#854D0E",
-    900: "#713F12",
-  },
-  green: {
-    50: "#F0FDF4",
-    100: "#DCFCE7",
-    200: "#BBF7D0",
-    300: "#86EFAC",
-    400: "#4ADE80",
-    500: "#22C55E",
-    600: "#16A34A",
-    700: "#15803D",
-    800: "#166534",
-    900: "#14532D",
-  },
-  teal: {
-    50: "#F0FDFA",
-    100: "#CCFBF1",
-    200: "#99F6E4",
-    300: "#5EEAD4",
-    400: "#2DD4BF",
-    500: "#14B8A6",
-    600: "#0D9488",
-    700: "#0F766E",
-    800: "#115E59",
-    900: "#134E4A",
-  },
-  blue: {
-    50: "#EFF6FF",
-    100: "#DBEAFE",
-    200: "#BFDBFE",
-    300: "#93C5FD",
-    400: "#60A5FA",
-    500: "#3B82F6",
-    600: "#2563EB",
-    700: "#1D4ED8",
-    800: "#1E40AF",
-    900: "#1E3A8A",
-  },
-  cyan: {
-    50: "#ECFEFF",
-    100: "#CFFAFE",
-    200: "#A5F3FC",
-    300: "#67E8F9",
-    400: "#22D3EE",
-    500: "#06B6D4",
-    600: "#0891B2",
-    700: "#0E7490",
-    800: "#155E75",
-    900: "#164E63",
-  },
-  purple: {
-    50: "#FAF5FF",
-    100: "#F3E8FF",
-    200: "#E9D5FF",
-    300: "#D8B4FE",
-    400: "#C084FC",
-    500: "#A855F7",
-    600: "#9333EA",
-    700: "#7E22CE",
-    800: "#6B21A8",
-    900: "#581C87",
-  },
-  pink: {
-    50: "#FDF2F8",
-    100: "#FCE7F3",
-    200: "#FBCFE8",
-    300: "#F9A8D4",
-    400: "#F472B6",
-    500: "#EC4899",
-    600: "#DB2777",
-    700: "#BE185D",
-    800: "#9D174D",
-    900: "#831843",
-  },
-  red: {
-    50: "#FEF2F2",
-    100: "#FEE2E2",
-    200: "#FECACA",
-    300: "#FCA5A5",
-    400: "#F87171",
-    500: "#EF4444",
-    600: "#DC2626",
-    700: "#B91C1C",
-    800: "#991B1B",
-    900: "#7F1D1D",
-  },
-  brand: {
-    50: { value: "#f0f7ff" },
-    100: { value: "#d9eaff" },
-    200: { value: "#b3d6ff" },
-    300: { value: "#84bbff" },
-    400: { value: "#539aff" },
-    500: { value: "#2b7cff" },
-    600: { value: "#1f60db" },
-    700: { value: "#184ab0" },
-    800: { value: "#153e8f" },
-    900: { value: "#133673" },
-  },
-};
-
-export const config = defineConfig({
+// 2) System config with brand tokens + recipes
+const config = defineConfig({
   theme: {
     tokens: {
+      colors: {
+        // Treat Chakra's `blue` palette as your brand palette
+        blue: {
+          50: { value: "#eff6ff" },
+          100: { value: "#dbeafe" },
+          200: { value: "#bfdbfe" },
+          300: { value: "#93c5fd" },
+          400: { value: "#60a5fa" },
+          500: { value: "#3b82f6" }, // primary brand
+          600: { value: "#2563eb" },
+          700: { value: "#1d4ed8" },
+          800: { value: "#1e40af" },
+          900: { value: "#1e3a8a" },
+        },
+        gray: {
+          50: { value: "#f9fafb" },
+          100: { value: "#f3f4f6" },
+          200: { value: "#e5e7eb" },
+          300: { value: "#d1d5db" },
+          400: { value: "#9ca3af" },
+          500: { value: "#6b7280" },
+          600: { value: "#4b5563" },
+          700: { value: "#374151" },
+          800: { value: "#1f2937" },
+          900: { value: "#111827" },
+        },
+      },
       fonts: {
-        heading: { value: "'Inter', ui-sans-serif" },
-        body: { value: "'Inter', ui-sans-serif" },
-        mono: { value: "'JetBrains Mono', ui-monospace" },
+        body: {
+          value: font,
+        },
+        heading: {
+          value: font,
+        },
       },
       radii: {
-        sm: { value: "6px" },
-        md: { value: "10px" },
-        lg: { value: "16px" },
-      },
-      sizes: {
-        content: { value: "1120px" }, // container max width
+        lg: { value: "12px" },
+        full: { value: "9999px" },
       },
       shadows: {
-        card: {
-          value: "0 1px 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)",
-        },
+        card: { value: "0 1px 2px rgba(15, 23, 42, 0.08)" },
       },
-      colors: colors as any,
+      spacing: {
+        4: { value: "1rem" },
+        6: { value: "1.5rem" },
+        8: { value: "2rem" },
+      },
+      fontSizes: {
+        sm: { value: "0.875rem" },
+        md: { value: "1rem" },
+        lg: { value: "1.125rem" },
+        xl: { value: "1.25rem" },
+        "2xl": { value: "1.5rem" },
+      },
     },
+
     semanticTokens: {
       colors: {
-        bg: { value: { base: "{colors.gray.50}", _dark: "{colors.gray.900}" } },
-        surface: { value: { base: "white", _dark: "{colors.gray.800}" } },
-        text: {
-          value: { base: "{colors.gray.800}", _dark: "{colors.gray.100}" },
+        //
+        // ===== BACKGROUNDS =====
+        //
+        "bg.page": {
+          value: {
+            base: "{colors.gray.50}",
+            _dark: "{colors.gray.900}",
+          },
         },
-        subtle: {
-          value: { base: "{colors.gray.600}", _dark: "{colors.gray.400}" },
+        "bg.surface": {
+          value: {
+            base: "{colors.white}",
+            _dark: "{colors.gray.800}",
+          },
         },
-        border: {
-          value: { base: "{colors.gray.200}", _dark: "{colors.gray.700}" },
+        "bg.elevated": {
+          value: {
+            base: "{colors.gray.100}",
+            _dark: "{colors.gray.700}",
+          },
         },
-        brand: {
-          value: { base: "{colors.brand.600}", _dark: "{colors.brand.400}" },
+        "bg.subtle": {
+          value: {
+            base: "{colors.gray.50}",
+            _dark: "{colors.gray.800}",
+          },
         },
-        success: {
-          value: { base: "{colors.green.600}", _dark: "{colors.green.300}" },
+        "bg.muted": {
+          value: {
+            base: "{colors.gray.100}",
+            _dark: "{colors.gray.800}",
+          },
         },
-        warning: {
-          value: { base: "{colors.orange.600}", _dark: "{colors.orange.300}" },
+        "bg.inverse": {
+          value: {
+            base: "{colors.gray.900}",
+            _dark: "{colors.gray.50}",
+          },
         },
-        danger: {
-          value: { base: "{colors.red.600}", _dark: "{colors.red.300}" },
+
+        //
+        // ===== TEXT =====
+        //
+        "text.heading": {
+          value: {
+            base: "{colors.gray.800}",
+            _dark: "{colors.gray.100}",
+          },
         },
-        focusRing: {
-          value: { base: "{colors.brand.500}", _dark: "{colors.brand.300}" },
+        "text.body": {
+          value: {
+            base: "{colors.gray.700}",
+            _dark: "{colors.gray.200}",
+          },
+        },
+        "text.muted": {
+          value: {
+            base: "{colors.gray.500}",
+            _dark: "{colors.gray.400}",
+          },
+        },
+        "text.inverse": {
+          value: {
+            base: "{colors.white}",
+            _dark: "{colors.gray.900}",
+          },
+        },
+        "text.link": {
+          value: {
+            base: "{colors.blue.600}",
+            _dark: "{colors.blue.300}",
+          },
+        },
+        "text.linkHover": {
+          value: {
+            base: "{colors.blue.700}",
+            _dark: "{colors.blue.200}",
+          },
+        },
+
+        //
+        // ===== BORDERS =====
+        //
+        "border.subtle": {
+          value: {
+            base: "{colors.gray.200}",
+            _dark: "{colors.gray.700}",
+          },
+        },
+        "border.muted": {
+          value: {
+            base: "{colors.gray.300}",
+            _dark: "{colors.gray.600}",
+          },
+        },
+        "border.accent": {
+          value: {
+            base: "{colors.blue.400}",
+            _dark: "{colors.blue.300}",
+          },
+        },
+
+        //
+        // ===== BRAND =====
+        //
+        "brand.solid": {
+          value: {
+            base: "{colors.blue.500}",
+            _dark: "{colors.blue.400}",
+          },
+        },
+        "brand.muted": {
+          value: {
+            base: "{colors.blue.100}",
+            _dark: "{colors.blue.800}",
+          },
+        },
+        "brand.subtle": {
+          value: {
+            base: "{colors.blue.50}",
+            _dark: "{colors.blue.900}",
+          },
+        },
+
+        //
+        // ===== ACCENTS (optional highlight surfaces) =====
+        //
+        "accent.yellow": {
+          value: {
+            base: "{colors.yellow.300}",
+            _dark: "{colors.yellow.400}",
+          },
+        },
+        "accent.red": {
+          value: {
+            base: "{colors.red.300}",
+            _dark: "{colors.red.400}",
+          },
+        },
+        "accent.green": {
+          value: {
+            base: "{colors.green.300}",
+            _dark: "{colors.green.400}",
+          },
+        },
+        "accent.purple": {
+          value: {
+            base: "{colors.purple.300}",
+            _dark: "{colors.purple.400}",
+          },
+        },
+
+        //
+        // ===== FOCUS RING =====
+        //
+        "focus.ring": {
+          value: {
+            base: "{colors.blue.500}",
+            _dark: "{colors.blue.300}",
+          },
+        },
+
+        //
+        // ===== OVERLAY =====
+        //
+        "overlay.backdrop": {
+          value: {
+            base: "rgba(0,0,0,0.45)",
+            _dark: "rgba(0,0,0,0.6)",
+          },
+        },
+      },
+
+      //
+      // ===== SHADOWS =====
+      //
+      shadows: {
+        "shadow.card": {
+          value: {
+            base: "0 1px 2px rgba(15, 23, 42, 0.08)",
+            _dark: "0 1px 3px rgba(0, 0, 0, 0.4)",
+          },
+        },
+        "shadow.popover": {
+          value: {
+            base: "0 4px 16px rgba(15, 23, 42, 0.15)",
+            _dark: "0 4px 20px rgba(0, 0, 0, 0.55)",
+          },
+        },
+        "shadow.focus": {
+          value: {
+            base: "0 0 0 2px rgba(59, 130, 246, 0.5)", // blue-500
+            _dark: "0 0 0 2px rgba(147, 197, 253, 0.4)", // blue-300
+          },
         },
       },
     },
-    textStyles: {
-      pageTitle: {
-        value: { fontSize: "2xl", fontWeight: "semibold", lineHeight: "short" },
-      },
-      section: { value: { fontSize: "lg", fontWeight: "semibold" } },
-      meta: { value: { fontSize: "sm", color: "{colors.subtle}" } },
-    },
+
+    // Attach our custom button recipe – this EXTENDS the built-in Button
     recipes: {
       button: buttonRecipe,
     },
   },
 });
 
+// export system for <ChakraProvider value={system}>
 export const system = createSystem(defaultConfig, config);
-
-// TODO find a better way
-(Text as any).defaultProps = {
-  color: "text",
-};
-(Heading as any).defaultProps = {
-  color: "text",
-};

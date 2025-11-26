@@ -1,0 +1,34 @@
+import { forwardRef } from "react";
+import {
+  Link as ChakraLink,
+  type LinkProps as ChakraLinkProps,
+} from "@chakra-ui/react";
+
+export type LinkProps = ChakraLinkProps;
+
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
+  (
+    {
+      color = "text.link",
+      fontWeight = "medium",
+      textDecoration = "none",
+      _hover = {
+        textDecoration: "underline",
+        color: "text.linkHover",
+      },
+      ...rest
+    },
+    ref,
+  ) => (
+    <ChakraLink
+      ref={ref}
+      color={color}
+      fontWeight={fontWeight}
+      textDecoration={textDecoration}
+      _hover={_hover}
+      {...rest}
+    />
+  ),
+);
+
+Link.displayName = "Link";
