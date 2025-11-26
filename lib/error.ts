@@ -37,6 +37,12 @@ export class ForbiddenError extends HttpError {
   }
 }
 
+export class UnauthorizedError extends HttpError {
+  constructor(message = "Unauthorized", opts?: ErrorOptions) {
+    super(401, message, opts);
+  }
+}
+
 type Route = (req: Request, ctx?: any) => Promise<any>;
 
 export function errorMiddleware(fn: Route): Route {

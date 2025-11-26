@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { DateTime } from "luxon";
 import { requireUser } from "@/lib/api-auth";
 import { prisma } from "@/lib/prisma";
@@ -13,8 +12,7 @@ enum ActionType {
 export const POST = errorMiddleware(
   async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     const { id: placeId } = await params;
-    // TODO requireSuperAdmin!
-    await requireUser();
+    await requireUser({ isSuperAdmin: true });
     const body = await req.json();
 
     // TODO validate payload
@@ -28,8 +26,6 @@ export const POST = errorMiddleware(
       if (!place) {
         throw new NotFoundError("Place not found");
       }
-
-      console.log("action payload", body);
 
       switch (body.type) {
         case ActionType.REUSE_EVENT: {
@@ -54,7 +50,6 @@ export const POST = errorMiddleware(
               startAt,
             },
           });
-          console.log(res);
           return res;
         }
         default:

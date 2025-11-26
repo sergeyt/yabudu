@@ -1,12 +1,19 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { UserRole } from "@/types/model";
+import { UnauthorizedError } from "@/lib/error";
 
-export async function requireUser() {
+export async function requireUser(params: { isSuperAdmin?: boolean } = {}) {
+  const { isSuperAdmin } = params;
   const session = await auth();
-  if (!session?.user) {
-    throw Object.assign(new Error("Unauthorized"), { status: 401 });
+  const user = session?.user as any;
+  if (!user) {
+    throw new UnauthorizedError();
   }
-  return { session, userId: (session.user as any).id as string };
+  if (isSuperAdmin && user.role !== UserRole.SUPERADMIN) {
+    throw new UnauthorizedError("Expect super admin role");
+  }
+  return { session, userId: user.id as string };
 }
 
 export async function isSuperAdmin(userId: string) {
