@@ -1,12 +1,20 @@
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig, type SentryBuildOptions } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import createNextPWA from "@ducanh2912/next-pwa";
 
 const nextConfig: NextConfig = {};
 
 const withNextIntl = createNextIntlPlugin();
 
-export default withSentryConfig(withNextIntl(nextConfig), {
+const withPWA = createNextPWA({
+  dest: "public",
+  cacheOnFrontEndNav: true,
+  // optionally disable service worker in dev:
+  // disable: process.env.NODE_ENV === 'development',
+});
+
+const sentryOptions: SentryBuildOptions = {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
@@ -37,4 +45,9 @@ export default withSentryConfig(withNextIntl(nextConfig), {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
-});
+};
+
+export default withSentryConfig(
+  withNextIntl(withPWA(nextConfig)),
+  sentryOptions,
+);
