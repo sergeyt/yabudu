@@ -1,10 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Select as ChakraSelect } from "@chakra-ui/react";
+import { type ListCollection, Select as ChakraSelect } from "@chakra-ui/react";
 
 // Derive prop types from Chakra subcomponents
-type SelectRootProps = React.ComponentPropsWithoutRef<typeof ChakraSelect.Root>;
+type SelectRootProps = Omit<
+  React.ComponentPropsWithoutRef<typeof ChakraSelect.Root>,
+  "collection"
+> & {
+  collection: ListCollection<{ value: string; label: string }>;
+};
 type SelectLabelProps = React.ComponentPropsWithoutRef<
   typeof ChakraSelect.Label
 >;
