@@ -8,3 +8,4 @@ export * from "./Link";
 export * from "./Text";
 export * from "./tooltip";
 export * from "./toaster";
+export * from "./Select";

@@ -11,12 +11,11 @@ import {
   HStack,
   IconButton,
   Portal,
-  Select,
   Separator,
 } from "@chakra-ui/react";
 import { FiInfo } from "react-icons/fi";
 import { FaMapMarkerAlt as LocationIcon } from "react-icons/fa";
-import { Text, Tooltip } from "../ui";
+import { Text, Tooltip, Select } from "@/ui/index";
 import type { Place } from "@/types/model";
 import type { TranslateFn } from "@/types/misc";
 
@@ -62,7 +61,7 @@ export default function PlacePicker({ places, currentId }: Props) {
           </Select.Label>
           <Select.Control w="full">
             <Select.Trigger pl={2}>
-              <Select.ValueText placeholder="Select place" color="text" />
+              <Select.ValueText placeholder="Select place" />
             </Select.Trigger>
             <Select.IndicatorGroup pr={2}>
               <Select.Indicator />
