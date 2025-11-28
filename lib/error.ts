@@ -43,11 +43,34 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
-type Route = (req: Request, ctx?: any) => Promise<any>;
+export type RouteContext<TParams = any> = {
+  params: TParams;
+};
+type Route<TParams = any> = (
+  req: Request,
+  ctx?: RouteContext<TParams>,
+) => Promise<any>;
 
-export function errorMiddleware(fn: Route): Route {
-  return async (req, ctx) => {
+export function errorMiddleware<TParams = any>(
+  fn: Route<TParams>,
+): Route<TParams> {
+  return async (req, ctxFromNext?: RouteContext<TParams>) => {
     try {
+      let ctx = ctxFromNext;
+      if (!ctxFromNext?.params) {
+        const url = new URL(req.url);
+
+        const queryParams = Object.fromEntries(
+          url.searchParams.entries(),
+        ) as Partial<TParams>;
+
+        const mergedParams: TParams = {
+          ...(ctxFromNext?.params ?? {}),
+          ...queryParams,
+        } as TParams;
+        ctx = { params: mergedParams };
+      }
+
       const resp = await fn(req, ctx);
       if (resp === undefined) {
         return NextResponse.json({ ok: true }, { status: 200 });
