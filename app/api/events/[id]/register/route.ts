@@ -63,7 +63,9 @@ export async function POST(
       type: outcome === "CONFIRMED" ? "REGISTERED" : "WAITLISTED",
       actorName,
     });
-  } catch {}
+  } catch (err) {
+    console.log(err);
+  }
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
