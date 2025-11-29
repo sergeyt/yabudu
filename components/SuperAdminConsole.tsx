@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { User, Place } from "@/types/model";
 import { useRouter } from "next/navigation";
-import { Card, VStack } from "@chakra-ui/react";
-import { Button, Text } from "../ui";
+import { VStack } from "@chakra-ui/react";
+import { Button, Text, Card } from "@/ui/index";
 import { api } from "@/lib/api";
 import { SuperAdminGate } from "./Gate";
 
