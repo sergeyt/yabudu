@@ -44,7 +44,7 @@ export class UnauthorizedError extends HttpError {
 }
 
 export type RouteContext<TParams = any> = {
-  params: TParams;
+  params: TParams | Promise<TParams>;
 };
 type Route<TParams = any> = (
   req: Request,
