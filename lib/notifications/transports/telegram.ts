@@ -1,10 +1,11 @@
-// lib/telegram.ts
 const API_BASE = "https://api.telegram.org";
 
+type ParseMode = "MarkdownV2" | "Markdown" | "HTML";
+
 type SendMessageOptions = {
-  chatId?: string | number; // overrides default chat
+  chatId: string | number;
   text: string;
-  parseMode?: "MarkdownV2" | "HTML";
+  parseMode?: ParseMode;
   disableWebPagePreview?: boolean;
   replyToMessageId?: number;
   inlineKeyboard?: Array<
@@ -14,14 +15,15 @@ type SendMessageOptions = {
 
 function assertEnv(name: string) {
   const v = process.env[name];
-  if (!v) throw new Error(`Missing env: ${name}`);
+  if (!v) {
+    throw new Error(`Missing env: ${name}`);
+  }
   return v;
 }
 
 const BOT_TOKEN = assertEnv("TELEGRAM_BOT_TOKEN");
-const DEFAULT_CHAT_ID = process.env.TELEGRAM_DEFAULT_CHAT_ID;
 
-async function tgFetch<T>(method: string, body: any): Promise<T> {
+async function request<T>(method: string, body: any): Promise<T> {
   const res = await fetch(`${API_BASE}/bot${BOT_TOKEN}/${method}`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -29,16 +31,25 @@ async function tgFetch<T>(method: string, body: any): Promise<T> {
   });
   const json = await res.json();
   if (!json.ok) {
-    throw new Error(`Telegram API error on ${method}: ${JSON.stringify(json)}`);
+    const err = `Telegram API error on ${method}: ${JSON.stringify(json)}`;
+    console.log(err);
+    throw new Error(err);
   }
   return json.result as T;
 }
 
+function escapeText(text: string, parseMode: ParseMode) {
+  if (parseMode === "MarkdownV2" || parseMode === "Markdown") {
+    return text.replace(/([_*[\]()~`>#+\-=|{}.!])/g, "\\$1");
+  }
+  return text;
+}
+
 export async function sendTelegramMessage(opts: SendMessageOptions) {
   const {
-    chatId = DEFAULT_CHAT_ID,
-    text,
-    parseMode,
+    chatId,
+    text: inputText,
+    parseMode = "MarkdownV2",
     disableWebPagePreview,
     replyToMessageId,
     inlineKeyboard,
@@ -50,7 +61,9 @@ export async function sendTelegramMessage(opts: SendMessageOptions) {
     );
   }
 
-  return tgFetch("sendMessage", {
+  const text = escapeText(inputText, parseMode);
+
+  return request("sendMessage", {
     chat_id: chatId,
     text,
     parse_mode: parseMode,
@@ -68,14 +81,14 @@ export async function sendPhoto(
   photoUrl: string,
   caption?: string,
 ) {
-  return tgFetch("sendPhoto", { chat_id: chatId, photo: photoUrl, caption });
+  return request("sendPhoto", { chat_id: chatId, photo: photoUrl, caption });
 }
 
 export async function answerCallbackQuery(
   callbackQueryId: string,
   text?: string,
 ) {
-  return tgFetch("answerCallbackQuery", {
+  return request("answerCallbackQuery", {
     callback_query_id: callbackQueryId,
     text,
   });
