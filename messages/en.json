@@ -74,5 +74,17 @@
     "too_early": "Registration will open 24 hours before the event starts and close at the start time.",
     "cap_reached": "The main capacity is full. You can join the waitlist.",
     "full": "The event is fully booked, including the waitlist."
+  },
+
+  "notifications": {
+    "event": "📍 {place}, *{event}* 🗓 {when}:",
+    "participants_header": "Participants:",
+    "participants_header_limit": "Participants (showing up to {limit}):",
+    "more_participants": "… and {count} more",
+    "counts": "👥 Confirmed: {confirmed}   ⏳ Waitlist: {reserved}",
+    "registered": "✅ {actor} just registered",
+    "waitlisted": "⏳ {actor} joined the waitlist",
+    "unregistered": "❎ {actor} unregistered",
+    "promoted": "⬆️ {actor} was promoted from waitlist to confirmed"
   }
 }

@@ -6,14 +6,14 @@ import { notifyEventChange } from "@/lib/notifications/notify";
 
 // register
 export async function POST(
-  _: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: eventId } = await params;
   const { userId } = await requireUser();
 
   let outcome: "CONFIRMED" | "RESERVED" | null = null;
-  let actorName: string | null = null;
+  let actor: string | null = null;
 
   await prisma.$transaction(async (tx) => {
     const event = await tx.event.findUnique({ where: { id: eventId } });
@@ -29,7 +29,7 @@ export async function POST(
     // gate checks...
 
     const sessionUser = await tx.user.findUnique({ where: { id: userId } });
-    actorName = sessionUser?.name ?? sessionUser?.email ?? null;
+    actor = sessionUser?.name ?? sessionUser?.email ?? null;
 
     const confirmedCount = await tx.registration.count({
       where: { eventId, status: "CONFIRMED" },
@@ -59,11 +59,13 @@ export async function POST(
   // Fire-and-forget (no await inside response if you prefer)
   try {
     await notifyEventChange({
+      req,
       eventId,
       type: outcome === "CONFIRMED" ? "REGISTERED" : "WAITLISTED",
-      actorName,
+      actor,
     });
   } catch (err) {
+    // TODO winston log
     console.log(err);
   }
 
@@ -72,19 +74,19 @@ export async function POST(
 
 // unregister
 export async function DELETE(
-  _: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: eventId } = await params;
   const { userId } = await requireUser();
 
-  let actorName: string | null = null;
+  let actor: string | null = null;
   let promotedName: string | null = null;
   let wasPromoted = false;
 
   await prisma.$transaction(async (tx) => {
     const me = await tx.user.findUnique({ where: { id: userId } });
-    actorName = me?.name ?? me?.email ?? null;
+    actor = me?.name ?? me?.email ?? null;
 
     await tx.registration
       .delete({
@@ -123,18 +125,23 @@ export async function DELETE(
   // notify channel about unregistration
   try {
     await notifyEventChange({
+      req,
       eventId,
       type: "UNREGISTERED",
-      actorName,
+      actor,
     });
     if (wasPromoted) {
       await notifyEventChange({
+        req,
         eventId,
         type: "PROMOTED",
-        promotedName,
+        actor: promotedName,
       });
     }
-  } catch {}
+  } catch (err) {
+    // TODO winston log
+    console.log(err);
+  }
 
   return NextResponse.json({ ok: true });
 }
