@@ -43,15 +43,17 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
-export type RouteContext<TParams = any> = {
+type ParamBase = Record<string, any>;
+
+export type RouteContext<TParams extends ParamBase = any> = {
   params: TParams | Promise<TParams>;
 };
-type Route<TParams = any> = (
+type Route<TParams extends ParamBase = any> = (
   req: Request,
-  ctx?: RouteContext<TParams>,
+  ctx: RouteContext<TParams>,
 ) => Promise<any>;
 
-export function errorMiddleware<TParams = any>(
+export function errorMiddleware<TParams extends ParamBase = any>(
   fn: Route<TParams>,
 ): Route<TParams> {
   return async (req, ctxFromNext?: RouteContext<TParams>) => {
@@ -69,6 +71,8 @@ export function errorMiddleware<TParams = any>(
           ...queryParams,
         } as TParams;
         ctx = { params: mergedParams };
+      } else if (!ctx) {
+        ctx = { params: {} as any };
       }
 
       const resp = await fn(req, ctx);
