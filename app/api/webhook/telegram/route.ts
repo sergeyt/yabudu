@@ -6,7 +6,7 @@ import { verifyLinkCode } from "@/lib/telegramLinkCode";
 // Optional shared secret to secure the webhook URL
 const SECRET = process.env.TELEGRAM_WEBHOOK_SECRET;
 
-type Params = { secret: string };
+type Params = { secret?: string };
 
 export const POST = errorMiddleware<Params>(async (req, ctx) => {
   const { params } = ctx;
