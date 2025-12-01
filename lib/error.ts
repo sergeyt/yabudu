@@ -55,8 +55,8 @@ type Route<TParams extends ParamBase = any> = (
 
 export function errorMiddleware<TParams extends ParamBase = any>(
   fn: Route<TParams>,
-): Route<TParams> {
-  return async (req, ctxFromNext?: RouteContext<TParams>) => {
+): any {
+  return async (req: Request, ctxFromNext?: RouteContext<TParams>) => {
     try {
       let ctx = ctxFromNext;
       if (!ctxFromNext?.params) {
