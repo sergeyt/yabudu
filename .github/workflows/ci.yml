@@ -30,6 +30,11 @@ jobs:
 
       - name: install deps
         run: pnpm install --frozen-lockfile
+        env:
+          DATABASE_URL: test
 
       - name: build
         run: pnpm build
+        env:
+          DATABASE_URL: test
+          TELEGRAM_BOT_TOKEN: test
