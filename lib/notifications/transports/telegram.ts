@@ -74,22 +74,3 @@ export async function sendTelegramMessage(opts: SendMessageOptions) {
       : undefined,
   });
 }
-
-// Extras you might want later:
-export async function sendPhoto(
-  chatId: string | number,
-  photoUrl: string,
-  caption?: string,
-) {
-  return request("sendPhoto", { chat_id: chatId, photo: photoUrl, caption });
-}
-
-export async function answerCallbackQuery(
-  callbackQueryId: string,
-  text?: string,
-) {
-  return request("answerCallbackQuery", {
-    callback_query_id: callbackQueryId,
-    text,
-  });
-}
