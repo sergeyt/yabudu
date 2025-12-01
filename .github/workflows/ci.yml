@@ -35,3 +35,5 @@ jobs:
 
       - name: build
         run: pnpm build
+        env:
+          DATABASE_URL: test
