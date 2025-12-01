@@ -1,0 +1,42 @@
+<svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 128 128"
+        role="img"
+        aria-label="Лого в виде буквы Я из лесенки и ракетки"
+>
+    <!-- Маска для отверстия в ракетке -->
+    <defs>
+        <mask id="paddle-mask">
+            <!-- всё видимое по умолчанию -->
+            <rect x="0" y="0" width="128" height="128" fill="white" />
+            <!-- отверстие в ракетке (невидимая область) -->
+            <circle cx="84" cy="38" r="9" fill="black" />
+        </mask>
+    </defs>
+
+    <!-- Лесенка, образующая левую «ножку» буквы Я -->
+    <path
+            d="M18 88 H56 V76 H44 V64 H32 V52 H18 Z"
+            fill="currentColor"
+    />
+
+    <!-- Голова ракетки с круглым вырезом -->
+    <circle
+            cx="84"
+            cy="38"
+            r="28"
+            fill="currentColor"
+            mask="url(#paddle-mask)"
+    />
+
+    <!-- Ручка ракетки, наклонённая вправо вниз -->
+    <rect
+            x="72"
+            y="56"
+            width="18"
+            height="34"
+            rx="4"
+            fill="currentColor"
+            transform="rotate(24 81 73)"
+    />
+</svg>
