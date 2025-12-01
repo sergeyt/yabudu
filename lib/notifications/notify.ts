@@ -4,20 +4,22 @@ import { getEffectiveChannelsForEvent } from "./effectiveChannels";
 // TODO unify interface of sending message to given chat
 import { sendMessage as sendMaxMessage } from "./transports/max";
 import { sendTelegramMessage } from "./transports/telegram";
+import { getTranslations } from "@/lib/locale";
 
 type ChangeType = "REGISTERED" | "WAITLISTED" | "UNREGISTERED" | "PROMOTED";
 
 const PARTICIPANT_LIST_LIMIT = 15;
+type User = { name?: string | null; email?: string | null };
 
-function displayName(u?: { name?: string | null; email?: string | null }) {
+function displayName(u?: User) {
   return (u?.name || u?.email || "Anonymous").trim();
 }
 
 export async function notifyEventChange(opts: {
+  req: Request;
   eventId: string;
   type: ChangeType;
-  actorName?: string | null;
-  promotedName?: string | null;
+  actor?: string | null;
 }) {
   const event = await prisma.event.findUnique({
     where: { id: opts.eventId },
@@ -35,6 +37,8 @@ export async function notifyEventChange(opts: {
     console.log("No connected channels");
     return;
   }
+
+  const t = await getTranslations(opts.req, "notifications");
 
   // Current counts
   const [confirmedCount, reservedCount] = await Promise.all([
@@ -61,7 +65,7 @@ export async function notifyEventChange(opts: {
   const truncated = merged.slice(0, PARTICIPANT_LIST_LIMIT);
   const remaining = merged.length - truncated.length;
 
-  const participantLines = truncated.map((r) => {
+  const participants = truncated.map((r) => {
     const icon = r.status === "CONFIRMED" ? "✅" : "⏳";
     return `${icon} ${displayName(r.user)}`;
   });
@@ -69,43 +73,39 @@ export async function notifyEventChange(opts: {
   // Header lines
   const when = new Date(event.startAt).toLocaleString();
   const place = event.place.name;
+  const actor = opts.actor ?? "Someone";
 
   const lines: string[] = [];
+  lines.push(t("header", { place, event: event.title, when }));
 
-  switch (opts.type) {
-    case "REGISTERED":
-      lines.push(
-        `✅ ${opts.actorName ?? "Someone"} registered for *${event.title}*`,
-      );
-      break;
-    case "WAITLISTED":
-      lines.push(
-        `⏳ ${opts.actorName ?? "Someone"} joined the waitlist for *${event.title}*`,
-      );
-      break;
-    case "UNREGISTERED":
-      lines.push(
-        `❎ ${opts.actorName ?? "Someone"} unregistered from *${event.title}*`,
-      );
-      break;
-    case "PROMOTED":
-      lines.push(
-        `⬆️ ${opts.promotedName ?? "Someone"} was promoted from waitlist to confirmed for *${event.title}*`,
-      );
-      break;
-  }
+  const translationMap = {
+    REGISTERED: "registered",
+    WAITLISTED: "waitlisted",
+    UNREGISTERED: "unregistered",
+    PROMOTED: "promoted",
+  };
+  lines.push(t(translationMap[opts.type], { actor }));
 
-  lines.push(`📍 ${place}   🗓 ${when}`);
-  lines.push(`👥 Confirmed: ${confirmedCount}   ⏳ Waitlist: ${reservedCount}`);
+  lines.push(
+    t("counts", { confirmed: confirmedCount, reserved: reservedCount }),
+  );
 
-  // Participant section
-  lines.push(`\nParticipants (showing up to ${PARTICIPANT_LIST_LIMIT}):`);
-  lines.push(...participantLines);
+  // Participants section
+  lines.push("");
   if (remaining > 0) {
-    lines.push(`… and ${remaining} more`);
+    const limit = PARTICIPANT_LIST_LIMIT;
+    lines.push(t("participants_header_limit", { limit }));
+  } else {
+    lines.push(t("participants_header"));
   }
 
-  const message = lines.join("\n");
+  lines.push(...participants);
+
+  if (remaining > 0) {
+    lines.push(t("more_participants", { count: remaining }));
+  }
+
+  const text = lines.join("\n");
 
   for (const channel of channels) {
     switch (channel.type) {
@@ -113,11 +113,11 @@ export async function notifyEventChange(opts: {
         await sendTelegramMessage({
           chatId: channel.target,
           parseMode: "MarkdownV2",
-          text: message,
+          text,
         });
         break;
       case ChannelType.MAX:
-        await sendMaxMessage(channel.target, message);
+        await sendMaxMessage(channel.target, text);
         break;
     }
   }

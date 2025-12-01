@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { prisma } from "@/lib/prisma";
 import type { ChannelType } from "@/types/model";
 
@@ -39,7 +40,7 @@ export async function getEffectiveChannelsForEvent(
 
   const placeChannels = event.place.channels;
   const eventChannels = event.channels;
-  const eventTypes = Object.groupBy(eventChannels, (c: any) => c.type);
+  const eventTypes = _.groupBy(eventChannels, (c: any) => c.type);
 
   return eventChannels.concat(
     placeChannels.filter((c: any) => !eventTypes[c.type]?.length),

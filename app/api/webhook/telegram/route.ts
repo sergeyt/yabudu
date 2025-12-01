@@ -42,17 +42,25 @@ export const POST = errorMiddleware(
         return;
       }
 
-      const v = verifyLinkCode(code);
-      if (!v.ok) {
+      const link = verifyLinkCode(code);
+      if (!link.ok) {
         await sendTelegramMessage({
           chatId,
-          text: `❌ Link failed: ${v.error}`,
+          text: `❌ Link failed: ${link.error}`,
         });
         return;
       }
 
       // Upsert TELEGRAM channel for this place
-      const placeId = v.placeId;
+      const { placeId } = link;
+      const place = await prisma.place.findUnique({ where: { id: placeId } });
+      if (!place) {
+        await sendTelegramMessage({
+          chatId,
+          text: `❌ Place not found: ${placeId}`,
+        });
+        return;
+      }
       const target = String(chatId);
 
       await prisma.placeNotificationChannel.upsert({
@@ -65,7 +73,7 @@ export const POST = errorMiddleware(
 
       await sendTelegramMessage({
         chatId,
-        text: `✅ Linked this chat to Place: <code>${placeId}</code>`,
+        text: `✅ Linked this chat to Place: ${place.name} (<code>${placeId}</code>)`,
         parseMode: "HTML",
       });
 
@@ -80,16 +88,24 @@ export const POST = errorMiddleware(
         return;
       }
 
-      const v = verifyLinkCode(code);
-      if (!v.ok) {
+      const link = verifyLinkCode(code);
+      if (!link.ok) {
         await sendTelegramMessage({
           chatId,
-          text: `❌ Unlink failed: ${v.error}`,
+          text: `❌ Unlink failed: ${link.error}`,
         });
         return;
       }
 
-      const placeId = v.placeId;
+      const { placeId } = link;
+      const place = await prisma.place.findUnique({ where: { id: placeId } });
+      if (!place) {
+        await sendTelegramMessage({
+          chatId,
+          text: `❌ Place not found: ${placeId}`,
+        });
+        return;
+      }
       const target = String(chatId);
 
       const deleted = await prisma.placeNotificationChannel.deleteMany({
@@ -100,8 +116,8 @@ export const POST = errorMiddleware(
         chatId,
         text:
           deleted.count > 0
-            ? `🗑️ Unlinked this chat from Place: <code>${placeId}</code>`
-            : `ℹ️ No existing link for Place <code>${placeId}</code>`,
+            ? `🗑️ Unlinked this chat from Place: ${place.name} (<code>${placeId}</code>)`
+            : `ℹ️ No existing link for Place: ${place.name} (<code>${placeId}</code>)`,
         parseMode: "HTML",
       });
 

@@ -77,8 +77,10 @@ export default function RegisterPanel({
     return { confirmedCount, reservedCount, myReg, canReg };
   }, [userId, event, regs]);
 
+  const isSuperAdmin = user.role === UserRole.SUPERADMIN;
+
   if (!event) {
-    if (user.role === UserRole.SUPERADMIN) {
+    if (isSuperAdmin) {
       return <SuperAdminConsole user={user} place={place} />;
     }
     return (
@@ -221,14 +223,21 @@ export default function RegisterPanel({
   };
 
   return (
-    <Card.Root w="full">
-      <Card.Header>{renderTitle()}</Card.Header>
-      <Card.Body>
-        <Box w="full" pt={4}>
-          {renderCTA()}
-          {renderError()}
+    <>
+      <Card.Root w="full">
+        <Card.Header>{renderTitle()}</Card.Header>
+        <Card.Body>
+          <Box w="full" pt={4}>
+            {renderCTA()}
+            {renderError()}
+          </Box>
+        </Card.Body>
+      </Card.Root>
+      {isSuperAdmin && (
+        <Box pt={3}>
+          <SuperAdminConsole user={user} place={place} />
         </Box>
-      </Card.Body>
-    </Card.Root>
+      )}
+    </>
   );
 }
